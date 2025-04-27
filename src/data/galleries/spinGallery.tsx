@@ -1,5 +1,5 @@
 // src/data/galleries/spinGallery.js
-import SpinArtBasic from "../../components/Canvases";
+import SpinArtDefault, { SpinArtMoveOnly, SpinArtSpinOnly } from "../../components/Canvases";
 
 export const spinGalleryData = {
   title: "Spinning Art Series",
@@ -7,13 +7,19 @@ export const spinGalleryData = {
     {
       name: "Whirlwind",
       description: "A high-speed abstract circle dance.",
-      preview: <SpinArtBasic interactive={false} />,
+      preview: <SpinArtDefault interactive={false} />,
       link: "/art/spin-1",
     },
     {
-      name: "Orbital Drift",
+      name: "Spin Only",
       description: "Nested spinning containers and orbital motion.",
-      preview: <SpinArtBasic interactive={false} />,
+      preview: <SpinArtSpinOnly interactive={false} />,
+      link: "/art/spin-2",
+    },
+    {
+      name: "Move Only",
+      description: "Nested spinning containers and orbital motion.",
+      preview: <SpinArtMoveOnly interactive={false} />,
       link: "/art/spin-2",
     },
   ],

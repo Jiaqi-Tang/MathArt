@@ -29,7 +29,7 @@ export default function GalleryPage({ title, sections }: Prop) {
             <div>
               <h2>{section.name}</h2>
               <p>{section.description}</p>
-              {/* section.link && <Link to={section.link}>See full artwork</Link>*/}
+              {section.link && <Link to={section.link}>See full artwork</Link>}
             </div>
           </div>
         </section>
