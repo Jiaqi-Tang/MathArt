@@ -1,16 +1,21 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import InfoPage from "./pages/InfoPages.js";
 import GalleryPage from "./pages/GalleryPage.js";
+import ArtPage from "./pages/ArtPage";
 
 import { spinGalleryData } from "./data/galleries/spinGallery.js";
-// import ArtPage from "./pages/ArtPage";
 // import AboutPage from "./pages/AboutPage";
 
-export default function App() {
+function AppContent() {
+  const location = useLocation();
+  
+  // Hide header if path starts with "/art"
+  const hideHeader = location.pathname.startsWith("/art");
+
   return (
-    <Router>
-      <Header /> {/* Always visible */}
+    <>
+      {!hideHeader && <Header />}
       <Routes>
         <Route path="/" element={<InfoPage />} />
         <Route
@@ -22,9 +27,17 @@ export default function App() {
             />
           }
         />
-        {/*<Route path="/art/:id" element={<ArtPage />} />
-        <Route path="/about" element={<AboutPage />} />*/}
+        <Route path="/art/:id" element={<ArtPage />} />
+        {/* <Route path="/about" element={<AboutPage />} /> */}
       </Routes>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

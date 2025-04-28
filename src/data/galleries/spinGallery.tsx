@@ -8,19 +8,17 @@ export const spinGalleryData = {
       name: "Whirlwind",
       description: "A high-speed abstract circle dance.",
       preview: <SpinArtDefault interactive={false} />,
-      link: "/art/spin-1",
+      link: "/art/spin-default",
     },
     {
       name: "Spin Only",
       description: "Nested spinning containers and orbital motion.",
       preview: <SpinArtSpinOnly interactive={false} />,
-      link: "/art/spin-2",
     },
     {
       name: "Move Only",
       description: "Nested spinning containers and orbital motion.",
       preview: <SpinArtMoveOnly interactive={false} />,
-      link: "/art/spin-2",
     },
   ],
 };

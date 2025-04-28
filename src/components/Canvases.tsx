@@ -6,6 +6,8 @@ interface Prop {
   interactive: boolean;
 }
 
+const SCALE = 0.97;
+
 export default function SpinArtDefault({ interactive }: Prop) {
   const canvasRef = useRef(null);
 
@@ -14,7 +16,7 @@ export default function SpinArtDefault({ interactive }: Prop) {
       const canvas = canvasRef.current;
       (async () =>
         {
-          const height = window.innerHeight;
+          const height = SCALE * window.innerHeight;
           const app = new Application();
           await app.init({ view: canvas, background: 'black', height: height, width: height });
             
@@ -49,7 +51,7 @@ export function SpinArtSpinOnly({ interactive }: Prop) {
       const canvas = canvasRef.current;
       (async () =>
         {
-          const height = window.innerHeight;
+          const height = SCALE * window.innerHeight;
           const app = new Application();
           await app.init({ view: canvas, background: 'black', height: height, width: height });
             
@@ -84,7 +86,7 @@ export function SpinArtMoveOnly({ interactive }: Prop) {
       const canvas = canvasRef.current;
       (async () =>
         {
-          const height = window.innerHeight;
+          const height = SCALE * window.innerHeight;
           const app = new Application();
           await app.init({ view: canvas, background: 'black', height: height, width: height });
             
