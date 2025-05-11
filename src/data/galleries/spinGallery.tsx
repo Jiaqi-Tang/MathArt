@@ -13,12 +13,12 @@ export const spinGalleryData = {
     {
       name: "Spin Only",
       description: "Nested spinning containers and orbital motion.",
-      preview: <SpinArtSpinOnly interactive={false} />,
+      preview: <SpinArtSpinOnly />,
     },
     {
       name: "Move Only",
       description: "Nested spinning containers and orbital motion.",
-      preview: <SpinArtMoveOnly interactive={false} />,
+      preview: <SpinArtMoveOnly />,
     },
   ],
 };
