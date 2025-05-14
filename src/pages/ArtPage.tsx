@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import SpinArtDefault from "../components/Canvases"
+import SpinArtDefault from "../components/InteractiveArt"
+import SpinArtInteractive from "../components/InteractiveArt";
 
 export default function ArtPage() {
     const { id } = useParams<{ id: string }>();
@@ -53,7 +54,7 @@ export default function ArtPage() {
               </div>
       
               {/* Pass controls to SpinArt */}
-              <SpinArtDefault
+              <SpinArtInteractive
                 interactive={true}
                 spinSpeed={spinSpeed}
                 numChildren={numChildren}

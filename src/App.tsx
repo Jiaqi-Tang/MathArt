@@ -1,3 +1,6 @@
+import "./css/global.css";
+
+
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import InfoPage from "./pages/InfoPages.js";

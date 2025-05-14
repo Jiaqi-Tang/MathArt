@@ -1,40 +1,35 @@
 import { Link } from "react-router-dom";
-import React from "react";
+import { useState } from 'react';
 
 export default function Header() {
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleSearchModal = () => {
+    setShowModal(!showModal);
+  };
+
   return (
-    <header style={headerStyle}>
-      <nav style={navStyle}>
-        <Link to="/" style={linkStyle}>
-          Home
-        </Link>
-        <Link to="/gallery" style={linkStyle}>
-          Gallery
-        </Link>
-        <Link to="/about" style={linkStyle}>
-          About
-        </Link>
+    <>
+    <header>
+      <nav className="nav">
+        <div className="nav-wrapper">
+          <div className="nav-content-wrapper">
+            <div className="nav-content">
+              <Link to="/" className="nav-title">Math Art</Link>
+              <div className="nav-menu">
+                <div className="nav-item-wrapper">
+                  <a href="/gallery" className="nav-item-content">Gallerys</a>
+                </div>
+                <div className="nav-item-wrapper">
+                  <a href="/about" className="nav-item-content">About</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </nav>
     </header>
+    </>
   );
 }
 
-const headerStyle: React.CSSProperties = {
-  background: "#222",
-  padding: "1rem",
-  position: "sticky",
-  top: 0,
-  zIndex: 1000,
-};
-
-const navStyle: React.CSSProperties = {
-  display: "flex",
-  gap: "1.5rem",
-  justifyContent: "center",
-};
-
-const linkStyle: React.CSSProperties = {
-  color: "#fff",
-  textDecoration: "none",
-  fontSize: "1.1rem",
-};

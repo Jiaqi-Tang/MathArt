@@ -17,23 +17,28 @@ export interface Prop {
 
 export default function GalleryPage({ title, sections }: Prop) {
   return (
-    <main style={{ padding: "2rem" }}>
-      <h1>{title}</h1>
+    <section className="everydayfeed">
+      <div className="section-content">
+      <h1 className="section-head">{title}</h1>
+      <ul role="list" className="section-tiles">
       {sections.map((section, idx) => (
-        <section key={idx} style={{ marginBottom: "2rem" }}>
-          <div style={{ display: "flex", gap: "2rem" }}>
-            <div>
-              {/* Placeholder or preview */}
-              <section>{section.preview}</section>
-            </div>
-            <div>
-              <h2>{section.name}</h2>
-              <p>{section.description}</p>
+        <li key={idx} role="listitem" className="tile-item nr-scroll-animation item-hero">
+        <div className="tile tile-hero small-loaded medium-loaded large-loaded" aria-label="">
+          <div className="tile__media" aria-hidden="true">
+            {section.preview}
+          </div>
+          <div className="tile__description" aria-hidden="true">
+              <div className="tile__head">
+                <h2>{section.name}</h2>
+                <p>{section.description}</p>
+              </div>
               {section.link && <a href={section.link ?? "/"} target="_blank" rel="noopener noreferrer">See full artwork</a>}
             </div>
-          </div>
-        </section>
+        </div>
+        </li>
       ))}
-    </main>
+      </ul>
+    </div>
+    </section>
   );
 }

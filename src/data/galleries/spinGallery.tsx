@@ -1,5 +1,6 @@
 // src/data/galleries/spinGallery.js
-import SpinArtDefault, { SpinArtMoveOnly, SpinArtSpinOnly } from "../../components/Canvases";
+import {SpinArtPreview} from "../../components/Preview";
+import { NestConOptions } from "pixi/nestedContainer";
 
 export const spinGalleryData = {
   title: "Spinning Art Series",
@@ -7,18 +8,8 @@ export const spinGalleryData = {
     {
       name: "Whirlwind",
       description: "A high-speed abstract circle dance.",
-      preview: <SpinArtDefault interactive={false} />,
+      preview: <SpinArtPreview/>,
       link: "/art/spin-default",
-    },
-    {
-      name: "Spin Only",
-      description: "Nested spinning containers and orbital motion.",
-      preview: <SpinArtSpinOnly />,
-    },
-    {
-      name: "Move Only",
-      description: "Nested spinning containers and orbital motion.",
-      preview: <SpinArtMoveOnly />,
     },
   ],
 };

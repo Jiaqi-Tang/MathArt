@@ -12,11 +12,11 @@ interface Prop {
   numLayers?: number;
 }
 
-const height = SCALE * window.innerHeight;
+const height = window.innerWidth;
 const LENGTH_RADIUS = height / 80;
 const NUM_LAYERS = 4;
 
-export default function SpinArtDefault({ interactive, spinSpeed, numChildren, numLayers }: Prop) {
+export default function SpinArtInteractive({ interactive, spinSpeed, numChildren, numLayers }: Prop) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const appRef = useRef<Application | null>(null);
   const viewportRef = useRef<Viewport | null>(null);
@@ -129,72 +129,3 @@ export default function SpinArtDefault({ interactive, spinSpeed, numChildren, nu
   return <canvas ref={canvasRef}></canvas>;
 }
 
-export function SpinArtSpinOnly() {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current;
-      (async () =>
-        {
-          const height = SCALE * window.innerHeight;
-          const app = new Application();
-          await app.init({ canvas: canvas, background: 'black', height: height, width: height });
-            
-          // Constants
-          const LENGTH_RADIUS = height / 100;
-          const NUM_LAYERS = 4;
-      
-          // Root Container
-          const rootNC = new nestCon(NUM_LAYERS, {radius: LENGTH_RADIUS});
-          rootNC.container.x = height / 2;
-          rootNC.container.y = height / 2;
-          app.stage.addChild(rootNC.container);
-      
-          // Updates Canvas on time interval to create motion
-          app.ticker.add((time) =>
-          {
-            rootNC.motion(0.001 * time.deltaTime);
-          });
-          
-        })();
-    }
-  }, []);
-
-  return <canvas ref={canvasRef}></canvas>;
-}
-
-export function SpinArtMoveOnly() {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current;
-      (async () =>
-        {
-          const height = SCALE * window.innerHeight;
-          const app = new Application();
-          await app.init({ canvas: canvas, background: 'black', height: height, width: height });
-            
-          // Constants
-          const LENGTH_RADIUS = height / 100;
-          const NUM_LAYERS = 4;
-      
-          // Root Container
-          const rootNC = new nestCon(NUM_LAYERS, {radius: LENGTH_RADIUS});
-          rootNC.container.x = height / 2;
-          rootNC.container.y = height / 2;
-          app.stage.addChild(rootNC.container);
-      
-          // Updates Canvas on time interval to create motion
-          app.ticker.add((time) =>
-          {
-            rootNC.motion(0.001 * time.deltaTime);
-          });
-          
-        })();
-    }
-  }, []);
-
-  return <canvas ref={canvasRef}></canvas>;
-}
