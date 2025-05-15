@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useLayoutEffect  } from "react";
 import { nestCon, NestConOptions } from "../pixi/nestedContainer";
 import { Application } from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
@@ -12,68 +12,78 @@ interface Prop {
   numLayers?: number;
 }
 
-const height = window.innerWidth;
-const LENGTH_RADIUS = height / 80;
+
 const NUM_LAYERS = 4;
 
 export default function SpinArtInteractive({ interactive, spinSpeed, numChildren, numLayers }: Prop) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const appRef = useRef<Application | null>(null);
   const viewportRef = useRef<Viewport | null>(null);
   const rootNCRef = useRef<nestCon | null>(null);
+  const [parentWidth, setParentWidth] = useState<number | null>(null);
 
   const spinMultiplierRef = useRef<number>(1);
 
+  const LENGTH_RADIUS = 10;
+
+  useLayoutEffect(() => {
+      if (wrapperRef.current) {
+        const width = Math.min(wrapperRef.current.getBoundingClientRect().width, window.innerHeight);
+        setParentWidth(width);
+      }
+    }, []);
+  
+
   useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current;
-      (async () =>
-        {
-          // Init Application
-          const app = new Application();
-          await app.init({ canvas: canvas, background: 'black', height: height, width: height });
-          appRef.current = app;
-          
-          // Init Zoom
-          const viewport = new Viewport({
-            screenWidth: height,
-            screenHeight: height,
-            // worldWidth: 2000,
-            // worldHeight: 2000,
+    if (!canvasRef.current || parentWidth === null) return;
+    
+    const canvas = canvasRef.current;
+    (async () =>
+    {
+      const LENGTH_RADIUS = parentWidth / 80;
 
-            events: app.renderer.events
-          });
-          viewportRef.current = viewport;
-          app.stage.addChild(viewport);
+      // Init Application
+      const app = new Application();
+      await app.init({ canvas: canvas, background: 'black', height: parentWidth, width: parentWidth });
+      appRef.current = app;
+      
+      // Init Zoom
+      const viewport = new Viewport({
+        screenWidth: parentWidth,
+        screenHeight: parentWidth,
+        events: app.renderer.events
+      });
+      viewportRef.current = viewport;
+      app.stage.addChild(viewport);
 
-          if(interactive){
-            viewport
-              .drag()
-              .pinch()
-              .wheel();
+      if(interactive){
+        viewport
+          .drag()
+          .pinch()
+          .wheel();
 
-              const handleWheel = (e: WheelEvent) => {
-                e.preventDefault();
-              };
-              canvas.addEventListener("wheel", handleWheel, { passive: false });
-          }
+          const handleWheel = (e: WheelEvent) => {
+            e.preventDefault();
+          };
+          canvas.addEventListener("wheel", handleWheel, { passive: false });
+      }
 
-          // Init Root Container
-          const rootNC = new nestCon(NUM_LAYERS, {radius: LENGTH_RADIUS});
-          rootNCRef.current = rootNC;
-          viewport.addChild(rootNC.container);
-          rootNC.container.position.set(0, 0);
-          viewport.moveCenter(0, 0);
+      // Init Root Container
+      const rootNC = new nestCon(NUM_LAYERS, {radius: LENGTH_RADIUS});
+      rootNCRef.current = rootNC;
+      viewport.addChild(rootNC.container);
+      rootNC.container.position.set(0, 0);
+      viewport.moveCenter(0, 0);
 
-          // Updates Canvas on time interval to create motion
-          app.ticker.add((time) => {
-            if (rootNCRef.current) {
-              rootNCRef.current.motion(spinMultiplierRef.current * 0.001 * time.deltaTime);
-            }
-          });
-        })();
-    }
-  }, []);
+      // Updates Canvas on time interval to create motion
+      app.ticker.add((time) => {
+        if (rootNCRef.current) {
+          rootNCRef.current.motion(spinMultiplierRef.current * 0.001 * time.deltaTime);
+        }
+      });
+    })();
+  }, [parentWidth]);
 
   /* 
    * What to customize when interactive:
@@ -126,6 +136,11 @@ export default function SpinArtInteractive({ interactive, spinSpeed, numChildren
   }
 
 
-  return <canvas ref={canvasRef}></canvas>;
+  return (
+    <div ref={wrapperRef} style={{ width: "100%" }}>
+      {/* Only render the canvas after width is known */}
+      {parentWidth && <canvas ref={canvasRef} />}
+    </div>
+  );
 }
 

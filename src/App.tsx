@@ -30,7 +30,10 @@ function AppContent() {
             />
           }
         />
-        <Route path="/art/:id" element={<ArtPage />} />
+        <Route 
+          path="/art/:id" 
+          element={
+            <ArtPage/>} />
         {/* <Route path="/about" element={<AboutPage />} /> */}
       </Routes>
     </>

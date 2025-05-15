@@ -1,6 +1,5 @@
 // src/pages/GalleryPage.jsx
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
 
 export interface GallerySection {
   name: string;
@@ -17,7 +16,7 @@ export interface Prop {
 
 export default function GalleryPage({ title, sections }: Prop) {
   return (
-    <section className="everydayfeed">
+    <section className="featured-display">
       <div className="section-content">
       <h1 className="section-head">{title}</h1>
       <ul role="list" className="section-tiles">

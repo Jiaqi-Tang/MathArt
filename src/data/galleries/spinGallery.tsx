@@ -1,6 +1,5 @@
 // src/data/galleries/spinGallery.js
 import {SpinArtPreview} from "../../components/Preview";
-import { NestConOptions } from "pixi/nestedContainer";
 
 export const spinGalleryData = {
   title: "Spinning Art Series",
