@@ -1,20 +1,18 @@
-import { Container, Graphics } from 'pixi.js';
+import { Container, Graphics, Filter } from 'pixi.js';
+import { GlowFilter, OutlineFilter } from "pixi-filters";
 
-interface NC {
-  container: Container;
-  motion(): void;
-}
 
 export interface NestConOptions {
+  layers?: number;
   numChildren?: number;
   shape?: number;
   radius?: number;
   colour?: string;
   moveDir?: number;
-  distance?: number;
-  motionFunc?: (scale: number) => void;
+  motionFunc?: number;
+  filters?: string[];
+  effects?: string[]; // To be implemented
 }
-
 
 export class nestCon {
   private layer: number;
@@ -24,73 +22,43 @@ export class nestCon {
   private colour: string;
   private moveDir: number;
   private distance: number;
-  private maxDist: number;
-  private minDist: number;
-  private children: nestCon[];
 
+  private children: nestCon[];
   private motionFunc: (scale: number) => void;
 
   public container: Container;
 
-  public constructor(layers: number, options: NestConOptions) {
-    
-    this.layer = layers;
-    this.numChildren = options.numChildren ? options.numChildren : 6;
-    this.radius = options.radius ? options.radius : 10;
-    this.colour = options.colour ? options.colour : 'white';
-    this.moveDir = options.moveDir ? options.moveDir : -1;
-    this.distance = options.distance ? options.distance : 1; // Replace with function
+  public constructor(options: NestConOptions) {
 
+    this.layer = options.layers ?? 4;
+    this.numChildren = options.numChildren ?? 6;
+    this.radius = options.radius ?? 10;
+    this.colour = options.colour ?? 'white';
+    this.moveDir = options.moveDir ?? -1;
 
-    this.distance = (this.radius + 1) * (Math.pow(3, layers - 1));
-
-    this.maxDist = this.distance;
-    this.minDist = (1 / layers) * this.distance;
+    // Distance to children
+    this.distance = (this.radius + 2) * (Math.pow(3, this.layer - 1));
 
     this.children = [];
     this.container = new Container();
 
-    if(!options.motionFunc){
-      // Defult function that rotates
-      this.motionFunc = function(scale){
-        const angle = 2 * Math.PI / this.numChildren;
+    this.motionFunc = function(scale){};
+    this.setMotionFunc(options.motionFunc ?? 0);
 
-        for(let i = 0; i < this.children.length; i++){
-          const child = this.children[i];
-          const childContainer = child.container;
-          if(Math.sqrt(Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)) >= this.maxDist){
-            child.moveDir = -1;
-          }else if(Math.sqrt(Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)) <= this.minDist){
-            child.moveDir = 1;
-          }
+    this.shape = new Graphics;
+    this.setShape(options.shape ?? 0);
 
-          const moveDist = 30 * (child.moveDir * Math.pow(this.distance, 2/3) + this.layer) * scale;
-          childContainer.x += moveDist * Math.cos(i * angle);
-          childContainer.y += moveDist * Math.sin(i * angle);
-        }
-
-        this.container.rotation += this.layer * this.layer * scale;
-      }
-    }else{
-      this.motionFunc = options.motionFunc;
+    this.shape.filters = [];
+    if(options.filters){
+      this.addFilters(options.filters);
     }
-
-    // Extend If statement to support more shapes
-    if(options.shape == 0){
-      this.shape = new Graphics()
-        .circle(0, 0, this.radius)
-        .fill(this.colour);
-    } else{
-      this.shape = new Graphics()
-        .circle(0, 0, this.radius)
-        .fill(this.colour);
-    }
-    this.container.addChild(this.shape);
 
     // Creates children
-    if(layers > 1){
+    if(this.layer > 1){
+      const childOptions = { ...options };
+      childOptions.layers = this.layer - 1;
       for(let i = 0; i < this.numChildren; i++){
-        const child = new nestCon(layers - 1, options)
+        const child = new nestCon(childOptions);
         
         this.children.push(child);
 
@@ -101,14 +69,167 @@ export class nestCon {
       }
     }
   }
+
+  private setMotionFunc(func : number){
+    switch (func){
+      default:
+      {
+        this.motionFunc = function(scale){
+          const angle = 2 * Math.PI / this.numChildren;
+
+          const maxDist = this.distance;
+          const minDist = (1 / this.layer) * this.distance;
+
+          for(let i = 0; i < this.children.length; i++){
+            const child = this.children[i];
+            const childContainer = child.container;
+            if(Math.sqrt(Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)) >= maxDist){
+              child.moveDir = -1;
+            }else if(Math.sqrt(Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)) <= minDist){
+              child.moveDir = 1;
+            }
+
+            const moveDist = 30 * (child.moveDir * Math.pow(this.distance, 2/3) + this.layer) * scale;
+            childContainer.x += moveDist * Math.cos(i * angle);
+            childContainer.y += moveDist * Math.sin(i * angle);
+          }
+
+          this.container.rotation += this.layer * this.layer * scale;
+        }
+      }
+    }
+  }
+
+  private setShape(shape: number){
+    switch (shape){
+      case 1: // Rectangle
+      {
+        this.shape = new Graphics()
+          .rect(- this.radius, - this.radius, 2 * this.radius, 2 * this.radius)
+          .fill(this.colour);
+        break;
+      } 
+      case 2: // Triangle
+      {
+        const cx = 0; // center x
+        const cy = 0; // center y
+        const side = 2 * this.radius; // length of each side
+
+        const height = (Math.sqrt(3) / 2) * side;
+
+        const p1 = [cx, cy - (2 / 3) * height];           // top vertex
+        const p2 = [cx - side / 2, cy + height / 3];      // bottom left
+        const p3 = [cx + side / 2, cy + height / 3];      // bottom right
+
+        this.shape = new Graphics()
+          .poly([...p1, ...p2, ...p3])
+          .fill(this.colour);
+        break;
+      }
+      case 3:
+      {
+        // Star parameters
+        const cx = 0; // center x
+        const cy = 0; // center y
+        const points = 5;
+        const outerRadius = 1.3 * this.radius;
+        const innerRadius = 0.7 * this.radius;
+
+        // Build the star's vertices
+        const vertices: number[] = [];
+        for (let i = 0; i < points * 2; i++) {
+          const angle = (Math.PI / points) * i;
+          const radius = i % 2 === 0 ? outerRadius : innerRadius;
+          const x = cx + Math.cos(angle) * radius;
+          const y = cy + Math.sin(angle) * radius;
+          vertices.push(x, y);
+        }
+
+        this.shape = new Graphics()
+          .poly(vertices)
+          .fill(this.colour);
+        
+        break;
+      }
+      case 4: // Heart, inspired by https://codepen.io/jolx/pen/EVGyVP
+      {
+        const cx = 0; // center x
+        const cy = 0; // center y
+        const xSize = 1.1 * this.radius;
+        const ySize = 0.8 * this.radius;
+        const ySize2 = 1 * this.radius;
+        const ySize3 = 1.5 * this.radius;
+
+        this.shape = new Graphics()
+          .bezierCurveTo(cx, cy - ySize, cx - xSize, cy - ySize, cx - xSize, cy)
+          .bezierCurveTo(cx - xSize, cy + ySize, cx, cy + ySize2, cx, cy + ySize3)
+          .bezierCurveTo(cx, cy + ySize2, cx + xSize, cy + ySize, cx + xSize, cy)
+          .bezierCurveTo(cx + xSize, cy - ySize, cx, cy - ySize, cx, cy)
+          .fill(this.colour);
+          break;
+      }
+      default:
+      {
+        this.shape = new Graphics()
+        .circle(0, 0, this.radius)
+        .fill(this.colour);
+      }
+    }
+    this.container.addChild(this.shape);
+  }
+
+  private addFilters(filters: string[]){
+    const curFils = this.shape.filters;
+    const curFilsArr: Filter[] = Array.isArray(curFils) ? [...curFils] : curFils ? [curFils] : [];
+    for(const filter of filters){
+      switch(filter){
+        case "outline":
+        {
+          if (!curFilsArr.some(f => f instanceof OutlineFilter)) {
+            curFilsArr.push(new OutlineFilter());
+            this.shape.filters = curFilsArr;
+          }
+          break;
+        }
+        case "glow":
+        {
+          if (!curFilsArr.some(f => f instanceof GlowFilter)) {
+            curFilsArr.push(new GlowFilter());
+            this.shape.filters = curFilsArr;
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  removeFilter(filters: string[]){
+    const curFils = this.shape.filters;
+    var curFilsArr: Filter[] = Array.isArray(curFils) ? curFils : curFils ? [curFils] : [];
+
+    for(const filter in filters){
+      switch(filter){
+        case "outline":
+        {
+            curFilsArr = curFilsArr.filter(f => !(f instanceof OutlineFilter));
+            break;
+        }
+        case "glow":
+        {
+            curFilsArr = curFilsArr.filter(f => !(f instanceof GlowFilter));
+            break;
+        }
+      }
+    }
+  }
   
   // Called on time interval to move the container
   motion(scale: number){
+    this.motionFunc(scale);
+
     if(this.layer == 1){
       return;
     }
-
-    this.motionFunc(scale);
     
     for(let i = 0; i < this.children.length; i++){
       this.children[i].motion(scale);

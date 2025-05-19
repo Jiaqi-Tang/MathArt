@@ -1,15 +1,21 @@
 import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
-import { nestCon, NestConOptions } from "../pixi/nestedContainer";
 import { Application } from "pixi.js";
 
-const NUM_LAYERS = 4;
+import { nestCon, NestConOptions } from "../pixi/nestedContainer";
+import { ArtCanvas } from "../pixi/artCanvas";
 
-export function SpinArtPreview(options: NestConOptions) {
+export interface PreviewOptions{
+  options: NestConOptions, 
+  filters?: string[]
+}
+
+export function SpinArtPreview({options, filters} : PreviewOptions ) {
+  const NCO = { ...options };
+
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const appRef = useRef<Application | null>(null);
   const rootNCRef = useRef<nestCon | null>(null);
-  const spinMultiplierRef = useRef<number>(1);
   const [parentWidth, setParentWidth] = useState<number | null>(null);
 
   // Phase 1: Measure parent width
@@ -24,35 +30,34 @@ export function SpinArtPreview(options: NestConOptions) {
   useEffect(() => {
     if (!canvasRef.current || parentWidth === null) return;
 
-    const LENGTH_RADIUS = parentWidth / 80;
+    NCO.radius = parentWidth / 80;
+    
     const canvas = canvasRef.current;
 
     (async () => {
-      const app = new Application();
-      await app.init({
-        canvas: canvas,
-        background: "black",
-        width: parentWidth,
-        height: parentWidth,
-      });
+      // Init ArtCanvas
+      const AC = await ArtCanvas.create(canvas, parentWidth, parentWidth);
+      appRef.current = AC.app;
+      if(filters){
+        AC.addFilter(filters);
+      }
 
-      appRef.current = app;
-
-      const rootNC = new nestCon(NUM_LAYERS, { radius: LENGTH_RADIUS });
+      // Init NC
+      const rootNC = new nestCon(NCO);
       rootNCRef.current = rootNC;
 
       rootNC.container.position.set(parentWidth / 2, parentWidth / 2);
-      app.stage.addChild(rootNC.container);
+      appRef.current.stage.addChild(rootNC.container);
 
-      app.ticker.add((time) => {
-        rootNC.motion(spinMultiplierRef.current * 0.001 * time.deltaTime);
+      // Motion control
+      appRef.current.ticker.add((time) => {
+        rootNC.motion(0.001 * time.deltaTime);
       });
     })();
   }, [parentWidth]);
 
   return (
     <div ref={wrapperRef} style={{ width: "100%" }}>
-      {/* Only render the canvas after width is known */}
       {parentWidth && <canvas ref={canvasRef} />}
     </div>
   );

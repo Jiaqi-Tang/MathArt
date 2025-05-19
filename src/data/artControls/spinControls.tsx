@@ -3,10 +3,9 @@ import SpinArtInteractive from "../../components/InteractiveArt";
 
 
 export default function spinArtControls(){
-  const [spinSpeed, setSpinSpeed] = useState(1); // default 1x
-  const [numChildren, setNumChildren] = useState(6); // default 5 children
-  const [numLayers, setNumLayers] = useState(4); // default zoom 1x
-
+  const [spinSpeed, setSpinSpeed] = useState(1); 
+  const [numChildren, setNumChildren] = useState(6); 
+  const [numLayers, setNumLayers] = useState(4); 
 
   return {
     title: "Spin Art Controls",

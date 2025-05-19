@@ -430,34 +430,12 @@ a.nav-title:hover {
 }
 
 
-.nav-item-wrapper a:hover {
-  color: #2997ff;
-}
-
 .main {
   padding: 0;
   overflow-x: hidden
 }
 
-.nr-scroll-animation {
-  --nr-animation-transform-x: 0;
-  --nr-animation-transform-y: 0;
-  --nr-animation-transform-scale: 1;
-  --nr-animation-duration: 800ms;
-}
-
-.nr-scroll-animation--off {
-  opacity: 0 !important;
-}
-
-.nr-scroll-animation--on {
-  animation-name: nr-scroll-animation;
-  animation-duration: var(--nr-animation-duration);
-  animation-timing-function: cubic-bezier(0.4, 0, 0.25, 1);
-}
-
 .tile {
-  background-color: #413677;
   display: flex;
   border-radius: 16px;
   overflow: hidden;
@@ -473,15 +451,11 @@ a.nav-title:hover {
 }
 
 .interactive {
-  /* background-color: #413677; */
   display: flex;
-  /* border-radius: 16px; */
   overflow: hidden;
   z-index: 0;
   position: relative;
-  /* width: 90%; */
   margin-left: 5%;
-  /* margin-right: auto; */
 }
 
 .interactive__art {
@@ -498,7 +472,45 @@ a.nav-title:hover {
   flex-grow: 1;
 }
 
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
 
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #7c6cd1;
+  padding: 5px;
+  /* border-radius: 10px; */
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: rgb(224 231 255);
+  padding: 5px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #2d2847;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the */
+.nav-item-wrapper:hover {
+  background-color: #413677;
+}
+
+.item-2up {
+  width: 45%;
+
+}
 
 .control {
   width: 100%;
@@ -788,7 +800,14 @@ html.js .tile.large-loaded .image {
   padding-bottom: 80px;
   overflow: hidden;
   background-color: #140b42;
-  margin-top: 0
+  margin-top: 10;
+}
+
+.variations {
+  padding-bottom: 80px;
+  overflow: hidden;
+  background-color: #061d50;
+  margin-top: 10;
 }
 
 @media only screen and (max-width: 1068px) {
@@ -1583,7 +1602,8 @@ html.js .tile.large-loaded .image {
 
 .tile.tile-2up {
   flex-direction: column;
-  width: 472px
+  width: 472px;
+  background-color: #284991;
 }
 
 .tile.tile-2up .tile__headline {
@@ -1697,7 +1717,7 @@ html.js .tile.large-loaded .image {
 .tile.tile-2up .tile__media,
 .tile.tile-2up .tile__image-container {
   width: 100%;
-  height: 266px;
+  /* height: 266px; */
   min-height: auto;
   flex-basis: auto;
   flex-shrink: 1
@@ -3106,7 +3126,8 @@ html.js .tile.large-loaded .image {
 
 .tile.tile-hero {
   flex-direction: row;
-  width: 100%
+  width: 100%;
+  background-color: #413677;
 }
 
 .tile.tile-hero .tile__headline {
@@ -3263,12 +3284,10 @@ html.js .tile.large-loaded .image {
   background-size: contain
 }
 
-.tile.tile-hero .tile__media,
-.tile.tile-hero .tile__image-container {
+.tile.tile-hero .tile__media {
   width: 65%;
   height: auto;
   min-height: 362px;
-   /* flex-basis: 643px; */
   flex-shrink: 1
 }
 

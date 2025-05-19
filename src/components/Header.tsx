@@ -17,8 +17,13 @@ export default function Header() {
             <div className="nav-content">
               <Link to="/" className="nav-title">Math Art</Link>
               <div className="nav-menu">
-                <div className="nav-item-wrapper">
-                  <a href="/gallery" className="nav-item-content">Gallerys</a>
+                <div className="dropdown">
+                  <div className="nav-item-wrapper">
+                    <button className="nav-item-content">Gallerys</button>
+                  </div>
+                  <div className="dropdown-content">
+                    <a href="/gallery/spin">Spin Art</a>
+                  </div>
                 </div>
                 <div className="nav-item-wrapper">
                   <a href="/about" className="nav-item-content">About</a>

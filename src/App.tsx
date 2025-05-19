@@ -7,7 +7,7 @@ import InfoPage from "./pages/InfoPages.js";
 import GalleryPage from "./pages/GalleryPage.js";
 import ArtPage from "./pages/ArtPage";
 
-import { spinGalleryData } from "./data/galleries/spinGallery.js";
+
 // import AboutPage from "./pages/AboutPage";
 
 function AppContent() {
@@ -21,19 +21,8 @@ function AppContent() {
       {!hideHeader && <Header />}
       <Routes>
         <Route path="/" element={<InfoPage />} />
-        <Route
-          path="/gallery"
-          element={
-            <GalleryPage
-              title={spinGalleryData.title}
-              sections={spinGalleryData.sections}
-            />
-          }
-        />
-        <Route 
-          path="/art/:id" 
-          element={
-            <ArtPage/>} />
+        <Route path="/gallery/:id" element={<GalleryPage/>}/>
+        <Route path="/art/:id" element={<ArtPage/>} />
         {/* <Route path="/about" element={<AboutPage />} /> */}
       </Routes>
     </>

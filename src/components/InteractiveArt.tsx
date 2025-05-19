@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState, useLayoutEffect  } from "react";
-import { nestCon, NestConOptions } from "../pixi/nestedContainer";
 import { Application } from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
+
+import { nestCon, NestConOptions } from "../pixi/nestedContainer";
+import { ArtCanvas } from "../pixi/artCanvas";
+
 
 const SCALE = 0.97;
 
@@ -15,7 +18,7 @@ interface Prop {
 
 const NUM_LAYERS = 4;
 
-export default function SpinArtInteractive({ interactive, spinSpeed, numChildren, numLayers }: Prop) {
+export default function SpinArtInteractive({ spinSpeed, numChildren, numLayers }: Prop) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const appRef = useRef<Application | null>(null);
@@ -25,59 +28,54 @@ export default function SpinArtInteractive({ interactive, spinSpeed, numChildren
 
   const spinMultiplierRef = useRef<number>(1);
 
-  const LENGTH_RADIUS = 10;
-
+  // Get width of parent
   useLayoutEffect(() => {
       if (wrapperRef.current) {
         const width = Math.min(wrapperRef.current.getBoundingClientRect().width, window.innerHeight);
         setParentWidth(width);
       }
     }, []);
-  
 
+  // Init art piece
   useEffect(() => {
     if (!canvasRef.current || parentWidth === null) return;
-    
-    const canvas = canvasRef.current;
-    (async () =>
-    {
-      const LENGTH_RADIUS = parentWidth / 80;
 
-      // Init Application
-      const app = new Application();
-      await app.init({ canvas: canvas, background: 'black', height: parentWidth, width: parentWidth });
-      appRef.current = app;
+    const canvas = canvasRef.current;
+
+    (async () => {
+      const AC = await ArtCanvas.create(canvas, parentWidth, parentWidth);
+      appRef.current = AC.app;
       
       // Init Zoom
       const viewport = new Viewport({
         screenWidth: parentWidth,
         screenHeight: parentWidth,
-        events: app.renderer.events
+        events: AC.app.renderer.events
       });
+      appRef.current.stage.addChild(viewport);
+
       viewportRef.current = viewport;
-      app.stage.addChild(viewport);
+      viewport
+        .drag()
+        .pinch()
+        .wheel();
 
-      if(interactive){
-        viewport
-          .drag()
-          .pinch()
-          .wheel();
-
-          const handleWheel = (e: WheelEvent) => {
-            e.preventDefault();
-          };
-          canvas.addEventListener("wheel", handleWheel, { passive: false });
-      }
+      // Prevent browser scroll
+      const handleWheel = (e: WheelEvent) => {
+        e.preventDefault();
+      };
+      canvas.addEventListener("wheel", handleWheel, { passive: false });
 
       // Init Root Container
-      const rootNC = new nestCon(NUM_LAYERS, {radius: LENGTH_RADIUS});
+      const rootNC = new nestCon({radius: parentWidth / 80});
       rootNCRef.current = rootNC;
       viewport.addChild(rootNC.container);
+
       rootNC.container.position.set(0, 0);
       viewport.moveCenter(0, 0);
 
       // Updates Canvas on time interval to create motion
-      app.ticker.add((time) => {
+      appRef.current.ticker.add((time) => {
         if (rootNCRef.current) {
           rootNCRef.current.motion(spinMultiplierRef.current * 0.001 * time.deltaTime);
         }
@@ -94,51 +92,46 @@ export default function SpinArtInteractive({ interactive, spinSpeed, numChildren
    *    - Number of children DONE
    *    - Number of layers DONE
    *    - Motion function (movement of circles, select from a list of options)
+   *    - Type of shape (triangle, square, star)
    *   Effects:
    *    - Colors of shape/background
    *    - Trail effects of tail
    *    - Other visual effects (blur, filters, dynamic colors)
    */
-  if(interactive){
-    useEffect(() => {
-      spinMultiplierRef.current = spinSpeed ?? 1;
-    }, [spinSpeed]);
+  useEffect(() => {
+    spinMultiplierRef.current = spinSpeed ?? 1;
+  }, [spinSpeed]);
 
-    useEffect(() => {
-      if (!appRef.current) return;
+  // User time interactions that cause reconstruction of nestCon
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport || !parentWidth){ // Error
+      return;
+    }
+
+    viewport.setZoom(1); // Reset zoom level to 1 (default scale)
+    viewport.moveCenter(0, 0); // Move to center
     
-      const app = appRef.current;
-      (async () =>
-        {
-          const viewport = viewportRef.current;
-          if (!viewport){ // Error
-            return;
-          }
+    // Remove old nestCon
+    if (rootNCRef.current) {
+      viewport.removeChild(rootNCRef.current.container);
+      rootNCRef.current = null;
+    }
+  
+    // Create new one
+    
+    const rootNC = new nestCon({ layers: numLayers, radius: parentWidth / 80, numChildren: numChildren });
+    rootNC.container.x = 0;
+    rootNC.container.y = 0;
+    rootNCRef.current = rootNC;
 
-          viewport.setZoom(1); // Reset zoom level to 1 (default scale)
-          viewport.moveCenter(0, 0); // Move to center
-          
-          // Remove old nestCon
-          if (rootNCRef.current) {
-            viewport.removeChild(rootNCRef.current.container);
-            rootNCRef.current = null;
-          }
-        
-          // Create new one
-          const rootNC = new nestCon(numLayers ?? 4, { radius: LENGTH_RADIUS, numChildren: numChildren });
-          rootNC.container.x = 0;
-          rootNC.container.y = 0;
-          rootNCRef.current = rootNC;
+    viewport.addChild(rootNC.container);
 
-          viewport.addChild(rootNC.container);
-        })();
-    }, [numChildren, numLayers]);
-  }
+  }, [numChildren, numLayers]);
 
 
   return (
-    <div ref={wrapperRef} style={{ width: "100%" }}>
-      {/* Only render the canvas after width is known */}
+    <div ref={wrapperRef}>
       {parentWidth && <canvas ref={canvasRef} />}
     </div>
   );
