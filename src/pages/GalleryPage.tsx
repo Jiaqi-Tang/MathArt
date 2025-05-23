@@ -5,7 +5,7 @@ import { spinGalleryData } from "../data/galleries/spinGallery.js";
 
 interface Featured {
   name: string;
-  description: string;
+  description: ReactNode;
   preview: ReactNode; 
   link: string; 
 }
@@ -55,9 +55,9 @@ function GalleryPageContent({ title, featured, gallery }: Prop) {
               <div className="tile__description" aria-hidden="true">
                 <div className="tile__head">
                   <h2>{featured.name}</h2>
-                  <p>{featured.description}</p>
+                  {featured.description}
                 </div>
-                {featured.link && <a href={featured.link ?? "/"} target="_blank" rel="noopener noreferrer">See full artwork</a>}
+                <a href={featured.link ?? "/"} className="button-art-page-link" target="_blank" rel="noopener noreferrer">Customize this piece</a>
                 </div>
             </div>
           </li>

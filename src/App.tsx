@@ -1,14 +1,11 @@
 import "./css/global.css";
 
-
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import InfoPage from "./pages/InfoPages.js";
 import GalleryPage from "./pages/GalleryPage.js";
 import ArtPage from "./pages/ArtPage";
-
-
-// import AboutPage from "./pages/AboutPage";
+import AboutPage from "./pages/AboutPage";
 
 function AppContent() {
   const location = useLocation();
@@ -23,7 +20,7 @@ function AppContent() {
         <Route path="/" element={<InfoPage />} />
         <Route path="/gallery/:id" element={<GalleryPage/>}/>
         <Route path="/art/:id" element={<ArtPage/>} />
-        {/* <Route path="/about" element={<AboutPage />} /> */}
+        <Route path="/about" element={<AboutPage />} />
       </Routes>
     </>
   );

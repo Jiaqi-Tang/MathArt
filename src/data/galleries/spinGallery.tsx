@@ -5,14 +5,23 @@ export const spinGalleryData = {
   title: "Spin Art",
   featured: {
     name: "The Classic",
-    description: "Ever wondered what nested spinning looks like but was unable to simulate it inside your head? Now you've seen it!\n\nThe Classic Spin Art is composed of two simple motions:\n- Each child spins around the parent at contant speed\n- Each child moves closer or further away from the parent at constant speed\n\n Putting these simple motions togther and nesting them within eachother give you -- The Classic Spin Art!",
-    preview: <SpinArtPreview options={{motionFunc: 1}}/>,
+    description: 
+    <>
+      <p>Ever wondered what nested spinning looks like but was unable to simulate it inside your head? Now you've seen it!</p>
+      <p>The Classic Spin Art is composed of two simple motions:</p>
+      <ul>
+        <li>Each child spins around the parent at contant speed</li>
+        <li>Each child moves closer or further away from the parent at constant speed</li>
+      </ul>
+      <p>Putting these simple motions togther and nesting them within eachother give you -- The Classic Spin Art!</p>
+    </>,
+    preview: <SpinArtPreview options={{}}/>,
     link: "/art/spin-classic",
   },
   gallery: [
     {
       name: "Lovely Dance",
-      preview: <SpinArtPreview options={{shape: 4, colour: '#ff00ff'}}/>,
+      preview: <SpinArtPreview options={{shape: 4, motionFunc: 1, colour: '#ff00ff'}}/>,
     },
     {
       name: "Glow with the Stars",

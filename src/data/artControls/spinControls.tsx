@@ -20,7 +20,7 @@ export function spinArtControls(){
   };
 
   return {
-    title: "Spin Art Controls",
+    title: "Spin Art",
     art: <SpinArtInteractive speed={spinSpeed} layers={numLayers} children={numChildren} color={color} filters={activeFilters}/>,
     controls: [
       {
@@ -48,7 +48,7 @@ export function spinArtControls(){
                     onClick={() => toggleFilter(filterName)}
                     style={{
                       margin: "4px",
-                      background: activeFilters.includes(filterName) ? "#48f" : "#ccc",
+                      background: activeFilters.includes(filterName) ? "#413677" : "#aaa",
                       color: "white",
                       border: "none",
                       padding: "6px 12px",

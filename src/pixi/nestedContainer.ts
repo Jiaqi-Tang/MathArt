@@ -91,27 +91,27 @@ export class nestCon {
         }
         break;
       }
-      case 2:
-      {
-        this.moveControl = 1;
-        this.motionFunc = function(scale){
-          const containerAngle = 2 * Math.PI / this.numChildren;
-          for(let i = 0; i < this.children.length; i++){
-            const childCon = this.children[i].container;
+      // case 2:
+      // {
+      //   this.moveControl = 1;
+      //   this.motionFunc = function(scale){
+      //     const containerAngle = 2 * Math.PI / this.numChildren;
+      //     for(let i = 0; i < this.children.length; i++){
+      //       const childCon = this.children[i].container;
 
-            const expX = (2 * this.distance / 3) * Math.cos(i * containerAngle);
-            const expY = (2 * this.distance / 3) * Math.sin(i * containerAngle);
+      //       const expX = (2 * this.distance / 3) * Math.cos(i * containerAngle);
+      //       const expY = (2 * this.distance / 3) * Math.sin(i * containerAngle);
 
-            const rotationAngle = Math.atan2(childCon.y - expY, childCon.x - expX);
+      //       const rotationAngle = Math.atan2(childCon.y - expY, childCon.x - expX);
 
-            childCon.x = expX + (this.distance / 3) * Math.cos(rotationAngle + 7 * this.layer * scale);
-            childCon.y = expY + (this.distance / 3) * Math.sin(rotationAngle + 7 * this.layer * scale);
-          }
+      //       childCon.x = expX + (this.distance / 3) * Math.cos(rotationAngle + 7 * this.layer * scale);
+      //       childCon.y = expY + (this.distance / 3) * Math.sin(rotationAngle + 7 * this.layer * scale);
+      //     }
 
-          this.container.rotation += this.layer * this.layer * scale;
-        }
-        break;
-      }
+      //     this.container.rotation += this.layer * this.layer * scale;
+      //   }
+      //   break;
+      // }
       default:
       {
         this.moveControl = -1;

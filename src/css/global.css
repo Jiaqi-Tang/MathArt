@@ -481,7 +481,7 @@ a.nav-title:hover {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #7c6cd1;
+  background-color: #5f50ad;
   padding: 5px;
   /* border-radius: 10px; */
   min-width: 100px;
@@ -497,7 +497,7 @@ a.nav-title:hover {
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #2d2847;}
+.dropdown-content a:hover {background-color: #7c6cd1;}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {display: block;}
@@ -505,6 +505,21 @@ a.nav-title:hover {
 /* Change the background color of the dropdown button when the */
 .nav-item-wrapper:hover {
   background-color: #413677;
+}
+
+.button-art-page-link {
+  display: inline-block;
+  padding: 10px;
+  font-size: 24px;
+  background-color: #284991;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.button-art-page-link:hover {
+  background-color: #000000;
 }
 
 .item-2up {
