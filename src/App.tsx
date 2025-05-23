@@ -1,6 +1,6 @@
 import "./css/global.css";
 
-import { HashRouter as Router, Routes, Route, useLocation, } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import InfoPage from "./pages/InfoPages.js";
 import GalleryPage from "./pages/GalleryPage.js";
@@ -28,8 +28,9 @@ function AppContent() {
 
 export default function App() {
   return (
-    <Router>
+    <BrowserRouter basename="/MathArt">
       <AppContent />
-    </Router>
+    </BrowserRouter>
   );
 }
+
