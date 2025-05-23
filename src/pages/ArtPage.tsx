@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { ReactNode } from "react";
 
-import spinArtControls from "../data/artControls/spinControls";
+import { spinArtControls } from "../data/artControls/spinControls";
 
 interface Control {
   description: string;

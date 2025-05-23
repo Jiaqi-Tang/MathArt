@@ -39,7 +39,7 @@ export function SpinArtPreview({options, filters} : PreviewOptions ) {
       const AC = await ArtCanvas.create(canvas, parentWidth, parentWidth);
       appRef.current = AC.app;
       if(filters){
-        AC.addFilter(filters);
+        AC.addFilters(filters);
       }
 
       // Init NC

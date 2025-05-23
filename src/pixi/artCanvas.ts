@@ -27,7 +27,7 @@ export class ArtCanvas{
     return instance;
   }
 
-    addFilter(filters: string[]){
+    addFilters(filters: string[]){
         const curFils = this.app.stage.filters;
         const curFilsArr: Filter[] = Array.isArray(curFils) ? [...curFils] : curFils ? [curFils] : [];
         for(const filter of filters){
@@ -36,7 +36,6 @@ export class ArtCanvas{
                 {
                     if (!curFilsArr.some(f => f instanceof BlurFilter)) {
                         curFilsArr.push(new BlurFilter());
-                        this.app.stage.filters = curFilsArr;
                     }
                     break;
                 }
@@ -44,7 +43,6 @@ export class ArtCanvas{
                 {
                     if (!curFilsArr.some(f => f instanceof BloomFilter)) {
                         curFilsArr.push(new BloomFilter());
-                        this.app.stage.filters = curFilsArr;
                     }
                     break;
                 }
@@ -52,7 +50,6 @@ export class ArtCanvas{
                 {
                     if (!curFilsArr.some(f => f instanceof ShockwaveFilter)) {
                         curFilsArr.push(new ShockwaveFilter());
-                        this.app.stage.filters = curFilsArr;
                     }
                     break;
                 }
@@ -60,19 +57,19 @@ export class ArtCanvas{
                 {
                     if (!curFilsArr.some(f => f instanceof SimplexNoiseFilter)) {
                         curFilsArr.push(new SimplexNoiseFilter());
-                        this.app.stage.filters = curFilsArr;
                     }
                     break;
                 }
             }
         }
+        this.app.stage.filters = curFilsArr;
     }
 
-    removeFilter(filters: string[]){
+    removeFilters(filters: string[]){
         const curFils = this.app.stage.filters;
         var curFilsArr: Filter[] = Array.isArray(curFils) ? curFils : curFils ? [curFils] : [];
 
-        for(const filter in filters){
+        for(const filter of filters){
             switch(filter){
                 case "blur":
                 {
@@ -96,5 +93,6 @@ export class ArtCanvas{
                 }
             }
         }
+        this.app.stage.filters = curFilsArr;
     }
 }

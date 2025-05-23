@@ -8,7 +8,6 @@ export interface NestConOptions {
   shape?: number;
   radius?: number;
   colour?: string;
-  moveDir?: number;
   motionFunc?: number;
   filters?: string[];
   effects?: string[]; // To be implemented
@@ -20,7 +19,7 @@ export class nestCon {
   private shape: Graphics;
   private radius: number;
   private colour: string;
-  private moveDir: number;
+  private moveControl: number;
   private distance: number;
 
   private children: nestCon[];
@@ -34,7 +33,6 @@ export class nestCon {
     this.numChildren = options.numChildren ?? 6;
     this.radius = options.radius ?? 10;
     this.colour = options.colour ?? 'white';
-    this.moveDir = options.moveDir ?? -1;
 
     // Distance to children
     this.distance = (this.radius + 2) * (Math.pow(3, this.layer - 1));
@@ -42,6 +40,7 @@ export class nestCon {
     this.children = [];
     this.container = new Container();
 
+    this.moveControl = -1;
     this.motionFunc = function(scale){};
     this.setMotionFunc(options.motionFunc ?? 0);
 
@@ -72,8 +71,50 @@ export class nestCon {
 
   private setMotionFunc(func : number){
     switch (func){
+      case 1:
+      {
+        this.motionFunc = function(scale){
+          const containerAngle = 2 * Math.PI / this.numChildren;
+          for(let i = 0; i < this.children.length; i++){
+            const childCon = this.children[i].container;
+
+            const expX = (2 * this.distance / 3) * Math.cos(i * containerAngle);
+            const expY = (2 * this.distance / 3) * Math.sin(i * containerAngle);
+
+            const rotationAngle = Math.atan2(childCon.y - expY, childCon.x - expX);
+
+            childCon.x = expX + (this.distance / 3) * Math.cos(rotationAngle + 7 * this.layer * scale);
+            childCon.y = expY + (this.distance / 3) * Math.sin(rotationAngle + 7 * this.layer * scale);
+          }
+
+          this.container.rotation += this.layer * this.layer * scale;
+        }
+        break;
+      }
+      case 2:
+      {
+        this.moveControl = 1;
+        this.motionFunc = function(scale){
+          const containerAngle = 2 * Math.PI / this.numChildren;
+          for(let i = 0; i < this.children.length; i++){
+            const childCon = this.children[i].container;
+
+            const expX = (2 * this.distance / 3) * Math.cos(i * containerAngle);
+            const expY = (2 * this.distance / 3) * Math.sin(i * containerAngle);
+
+            const rotationAngle = Math.atan2(childCon.y - expY, childCon.x - expX);
+
+            childCon.x = expX + (this.distance / 3) * Math.cos(rotationAngle + 7 * this.layer * scale);
+            childCon.y = expY + (this.distance / 3) * Math.sin(rotationAngle + 7 * this.layer * scale);
+          }
+
+          this.container.rotation += this.layer * this.layer * scale;
+        }
+        break;
+      }
       default:
       {
+        this.moveControl = -1;
         this.motionFunc = function(scale){
           const angle = 2 * Math.PI / this.numChildren;
 
@@ -84,17 +125,18 @@ export class nestCon {
             const child = this.children[i];
             const childContainer = child.container;
             if(Math.sqrt(Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)) >= maxDist){
-              child.moveDir = -1;
+              child.moveControl = -1;
             }else if(Math.sqrt(Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)) <= minDist){
-              child.moveDir = 1;
+              child.moveControl = 1;
             }
 
-            const moveDist = 30 * (child.moveDir * Math.pow(this.distance, 2/3) + this.layer) * scale;
+            const moveDist = 30 * (child.moveControl * Math.pow(this.distance, 2/3) + this.layer) * scale;
             childContainer.x += moveDist * Math.cos(i * angle);
             childContainer.y += moveDist * Math.sin(i * angle);
           }
 
           this.container.rotation += this.layer * this.layer * scale;
+          // this.container.rotation += 5 * this.layer * scale;
         }
       }
     }
@@ -178,7 +220,7 @@ export class nestCon {
     this.container.addChild(this.shape);
   }
 
-  private addFilters(filters: string[]){
+  addFilters(filters: string[]){
     const curFils = this.shape.filters;
     const curFilsArr: Filter[] = Array.isArray(curFils) ? [...curFils] : curFils ? [curFils] : [];
     for(const filter of filters){
@@ -187,7 +229,6 @@ export class nestCon {
         {
           if (!curFilsArr.some(f => f instanceof OutlineFilter)) {
             curFilsArr.push(new OutlineFilter());
-            this.shape.filters = curFilsArr;
           }
           break;
         }
@@ -195,31 +236,40 @@ export class nestCon {
         {
           if (!curFilsArr.some(f => f instanceof GlowFilter)) {
             curFilsArr.push(new GlowFilter());
-            this.shape.filters = curFilsArr;
           }
           break;
         }
       }
     }
+    this.shape.filters = curFilsArr;
+
+    for(const child of this.children){
+      child.addFilters(filters);
+    }
   }
 
-  removeFilter(filters: string[]){
+  removeFilters(filters: string[]){
     const curFils = this.shape.filters;
     var curFilsArr: Filter[] = Array.isArray(curFils) ? curFils : curFils ? [curFils] : [];
 
-    for(const filter in filters){
+    for(const filter of filters){
       switch(filter){
         case "outline":
         {
-            curFilsArr = curFilsArr.filter(f => !(f instanceof OutlineFilter));
-            break;
+          curFilsArr = curFilsArr.filter(f => !(f instanceof OutlineFilter));
+          break;
         }
         case "glow":
         {
-            curFilsArr = curFilsArr.filter(f => !(f instanceof GlowFilter));
-            break;
+          curFilsArr = curFilsArr.filter(f => !(f instanceof GlowFilter));
+          break;
         }
       }
+    }
+    this.shape.filters = curFilsArr;
+
+    for(const child of this.children){
+      child.removeFilters(filters);
     }
   }
   
