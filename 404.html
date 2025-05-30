@@ -1,15 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Redirecting...</title>
-    <script>
-      // DO NOT strip /MathArt — keep the full path!
-      var redirectTo = window.location.pathname + window.location.search + window.location.hash;
-      window.location.replace('/MathArt/index.html?redirect=' + encodeURIComponent(redirectTo));
-    </script>
+    <meta charset="UTF-8" />
+    <title>Math Art</title>
   </head>
   <body>
-    <p>Redirecting...</p>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
