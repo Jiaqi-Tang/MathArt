@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title>Redirecting...</title>
     <script>
-      // Redirect to index.html while preserving the path
-      var redirectTo = window.location.pathname.replace('/MathArt', '') || '/';
-      window.location.replace('/MathArt/index.html?redirect=' + redirectTo);
+      // DO NOT strip /MathArt — keep the full path!
+      var redirectTo = window.location.pathname + window.location.search + window.location.hash;
+      window.location.replace('/MathArt/index.html?redirect=' + encodeURIComponent(redirectTo));
     </script>
   </head>
   <body>
