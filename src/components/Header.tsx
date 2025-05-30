@@ -22,11 +22,11 @@ export default function Header() {
                     <button className="nav-item-content">Gallerys</button>
                   </div>
                   <div className="dropdown-content">
-                    <a href="/gallery/spin">Spin Art</a>
+                    <Link to="/gallery/spin">Spin Art</Link>
                   </div>
                 </div>
                 <div className="nav-item-wrapper">
-                  <a href="/about" className="nav-item-content">About</a>
+                  <Link to="/about" className="nav-item-content">About</Link>
                 </div>
               </div>
             </div>
