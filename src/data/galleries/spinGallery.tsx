@@ -1,6 +1,6 @@
-// src/data/galleries/spinGallery.js
 import {SpinArtPreview} from "../../components/Preview";
 
+// Content for Spin Art Gallery Page
 export const spinGalleryData = {
   title: "Spin Art",
   featured: {

@@ -10,7 +10,7 @@ import AboutPage from "./pages/AboutPage";
 function AppContent() {
   const location = useLocation();
 
-  // Hide header if path starts with "/art"
+  // Hide header on art pages
   const hideHeader = location.pathname.startsWith("/art");
 
   return (
@@ -26,6 +26,7 @@ function AppContent() {
   );
 }
 
+// App component
 export default function App() {
   return (
     <BrowserRouter basename="/MathArt">

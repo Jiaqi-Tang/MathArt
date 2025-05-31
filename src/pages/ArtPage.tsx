@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { ReactNode } from "react";
-
 import { spinArtControls } from "../data/artControls/spinControls";
 
 interface Control {
@@ -8,13 +7,13 @@ interface Control {
   input: ReactNode; 
 }
 
-// Whole gallery data object
 interface Prop {
   title: string;
   art: ReactNode;
   controls: Control[];
 }
 
+// Art Page Component
 export default function ArtPage() {
   const { id } = useParams<{ id: string }>();
 
@@ -31,7 +30,7 @@ export default function ArtPage() {
   }
 }
 
-
+// Helper function for better abstraction
 function ArtPageContent({title, art, controls}: Prop) {
   return (
     <section className="featured-display">
@@ -41,7 +40,6 @@ function ArtPageContent({title, art, controls}: Prop) {
           <div >
             {controls.map((control, idx) => (
             <div className="control" key={idx}>
-            
               <div className="control__description">{control.description}</div>
               <div className="control__input">
                 <label>{control.input}</label>

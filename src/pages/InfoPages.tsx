@@ -1,4 +1,4 @@
-
+// Component for Information Page
 export default function InfoPage() {
   return (
     <main>

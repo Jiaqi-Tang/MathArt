@@ -1,13 +1,7 @@
 import { Link } from "react-router-dom";
-import { useState } from 'react';
 
+// Header Component for Website
 export default function Header() {
-  const [showModal, setShowModal] = useState(false);
-
-  const toggleSearchModal = () => {
-    setShowModal(!showModal);
-  };
-
   return (
     <>
     <header>

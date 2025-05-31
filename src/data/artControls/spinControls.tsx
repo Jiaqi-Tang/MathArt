@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { HexColorPicker } from "react-colorful";
-
 import SpinArtInteractive, {AVAIABLE_FILTERS} from "../../components/InteractiveArt";
 
-
+// Control pannel for the Interactive Spin Art Page
 export function spinArtControls(){
+  // Refs
   const [spinSpeed, setSpinSpeed] = useState(1); 
   const [numChildren, setNumChildren] = useState(6); 
   const [numLayers, setNumLayers] = useState(4); 
   const [color, setColor] = useState("#ffffff");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
+  // Button toggle
   const toggleFilter = (name: string) => {
     setActiveFilters((prev) =>
       prev.includes(name)
@@ -19,7 +20,7 @@ export function spinArtControls(){
     );
   };
 
-  return {
+  return { // Returns Components for controls
     title: "Spin Art",
     art: <SpinArtInteractive speed={spinSpeed} layers={numLayers} children={numChildren} color={color} filters={activeFilters}/>,
     controls: [
@@ -41,24 +42,25 @@ export function spinArtControls(){
       },
       {
         description: "Filters:",
-        input:<div>
-                {AVAIABLE_FILTERS.map((filterName) => (
-                  <button
-                    key={filterName}
-                    onClick={() => toggleFilter(filterName)}
-                    style={{
-                      margin: "4px",
-                      background: activeFilters.includes(filterName) ? "#413677" : "#aaa",
-                      color: "white",
-                      border: "none",
-                      padding: "6px 12px",
-                      cursor: "pointer"
-                    }}
-                  >
-                    {filterName}
-                  </button>
-                ))}
-              </div>
+        input:
+        <div>
+          {AVAIABLE_FILTERS.map((filterName) => (
+            <button
+              key={filterName}
+              onClick={() => toggleFilter(filterName)}
+              style={{
+                margin: "4px",
+                background: activeFilters.includes(filterName) ? "#413677" : "#aaa",
+                color: "white",
+                border: "none",
+                padding: "6px 12px",
+                cursor: "pointer"
+              }}
+            >
+              {filterName}
+            </button>
+          ))}
+        </div>
 
       },
     ],
