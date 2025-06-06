@@ -1,5 +1,6 @@
 import { Container, Graphics, Filter } from "pixi.js";
 import { GlowFilter, OutlineFilter } from "pixi-filters";
+import { drawShape } from "./tools/functions";
 
 export interface NestConOptions {
   layers?: number;
@@ -14,15 +15,16 @@ export interface NestConOptions {
 
 // Nested containers class whihc is the core part for Spin Art
 // Each shape is added to its parent's container so they can be spun
-export class nestCon {
+export class spinCon {
   private layer: number;
   private numChildren: number;
+  private shape_num: number;
   private shape: Graphics;
   private radius: number;
   private colour: string;
   private moveControl: number;
   private distance: number;
-  private children: nestCon[];
+  private children: spinCon[];
   private motionFunc: (scale: number) => void;
   public container: Container;
 
@@ -31,6 +33,7 @@ export class nestCon {
     // Reads in input parameters
     this.layer = options.layers ?? 4;
     this.numChildren = options.numChildren ?? 6;
+    this.shape_num = options.shape ?? 0;
     this.radius = options.radius ?? 10;
     this.colour = options.colour ?? "white";
 
@@ -47,8 +50,10 @@ export class nestCon {
     this.setMotionFunc(options.motionFunc ?? 0);
 
     // Sets shape
+
     this.shape = new Graphics();
-    this.setShape(options.shape ?? 0);
+    this.container.addChild(this.shape);
+    drawShape(this.shape, this.shape_num, this.radius, this.colour);
 
     // Adds Filters
     this.shape.filters = [];
@@ -62,7 +67,7 @@ export class nestCon {
       childOptions.layers = this.layer - 1;
 
       for (let i = 0; i < this.numChildren; i++) {
-        const child = new nestCon(childOptions);
+        const child = new spinCon(childOptions);
         this.children.push(child);
 
         const angle = (2 * Math.PI) / this.numChildren;
@@ -71,6 +76,14 @@ export class nestCon {
         this.container.addChild(child.container);
       }
     }
+  }
+
+  destroy() {
+    for (let i = 0; i < this.children.length; i++) {
+      this.children[i].destroy();
+    }
+    this.shape.destroy;
+    this.container.destroy;
   }
 
   // Helper function that holds all possible move functions
@@ -167,91 +180,14 @@ export class nestCon {
     }
   }
 
-  // Helper function that holds all avaliable shapes
-  private setShape(shape: number) {
-    switch (shape) {
-      case 1: {
-        // Rectangle
-        this.shape = new Graphics()
-          .rect(-this.radius, -this.radius, 2 * this.radius, 2 * this.radius)
-          .fill(this.colour);
-        break;
-      }
-      case 2: {
-        // Triangle
-        const cx = 0;
-        const cy = 0;
-        const side = 2 * this.radius;
+  setShape(shape_num?: number, colour?: string) {
+    this.colour = colour ?? this.colour;
+    this.shape_num = shape_num ?? this.shape_num;
+    drawShape(this.shape, this.shape_num, this.radius, this.colour);
 
-        const height = (Math.sqrt(3) / 2) * side;
-
-        const p1 = [cx, cy - (2 / 3) * height];
-        const p2 = [cx - side / 2, cy + height / 3];
-        const p3 = [cx + side / 2, cy + height / 3];
-
-        this.shape = new Graphics()
-          .poly([...p1, ...p2, ...p3])
-          .fill(this.colour);
-        break;
-      }
-      case 3: {
-        // Star
-        const cx = 0;
-        const cy = 0;
-        const points = 5;
-        const outerRadius = 1.3 * this.radius;
-        const innerRadius = 0.7 * this.radius;
-
-        const vertices: number[] = [];
-        for (let i = 0; i < points * 2; i++) {
-          const angle = (Math.PI / points) * i;
-          const radius = i % 2 === 0 ? outerRadius : innerRadius;
-          const x = cx + Math.cos(angle) * radius;
-          const y = cy + Math.sin(angle) * radius;
-          vertices.push(x, y);
-        }
-
-        this.shape = new Graphics().poly(vertices).fill(this.colour);
-
-        break;
-      }
-      case 4: {
-        // Heart, modified from https://codepen.io/jolx/pen/EVGyVP
-        const cx = 0;
-        const cy = 0;
-        const xSize = 1.1 * this.radius;
-        const ySize = 0.8 * this.radius;
-        const ySize2 = 1 * this.radius;
-        const ySize3 = 1.5 * this.radius;
-
-        this.shape = new Graphics()
-          .bezierCurveTo(cx, cy - ySize, cx - xSize, cy - ySize, cx - xSize, cy)
-          .bezierCurveTo(
-            cx - xSize,
-            cy + ySize,
-            cx,
-            cy + ySize2,
-            cx,
-            cy + ySize3
-          )
-          .bezierCurveTo(
-            cx,
-            cy + ySize2,
-            cx + xSize,
-            cy + ySize,
-            cx + xSize,
-            cy
-          )
-          .bezierCurveTo(cx + xSize, cy - ySize, cx, cy - ySize, cx, cy)
-          .fill(this.colour);
-        break;
-      }
-      default: {
-        // Circle
-        this.shape = new Graphics().circle(0, 0, this.radius).fill(this.colour);
-      }
+    for (let i = 0; i < this.children.length; i++) {
+      this.children[i].setShape(shape_num, colour);
     }
-    this.container.addChild(this.shape);
   }
 
   // For adding filters without reconstruction

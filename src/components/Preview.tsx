@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
-import { Application } from "pixi.js";
-import { nestCon, NestConOptions } from "../pixi/nestedContainer";
+import { spinCon, NestConOptions } from "../pixi/nestedContainer";
 import { ArtCanvas } from "../pixi/artCanvas";
 
 // Input Options
-export interface PreviewOptions{
-  options: NestConOptions, 
-  filters?: string[]
+export interface PreviewOptions {
+  options: NestConOptions;
+  filters?: string[];
 }
 
-export function SpinArtPreview({options, filters} : PreviewOptions ) {
+export function SpinArtPreview({ options, filters }: PreviewOptions) {
   // Make copy to modify input as needed
   const NCO = { ...options };
 
   // Refs
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const appRef = useRef<Application | null>(null);
-  const rootNCRef = useRef<nestCon | null>(null);
+  const rootNCRef = useRef<spinCon | null>(null);
+  const ACRef = useRef<ArtCanvas | null>(null);
+
   const [parentWidth, setParentWidth] = useState<number | null>(null);
 
   // Get width of parent to set size of Art Piece
@@ -37,21 +37,27 @@ export function SpinArtPreview({options, filters} : PreviewOptions ) {
 
     (async () => {
       // Create Canvas
-      const AC = await ArtCanvas.create(canvas, parentWidth, parentWidth);
-      appRef.current = AC.app;
-      if(filters){ // Add Canvas filters
-        AC.addFilters(filters);
+      ACRef.current = await ArtCanvas.create({
+        canvas,
+        height: parentWidth,
+        width: parentWidth,
+      });
+      if (filters) {
+        // Add Canvas filters
+        ACRef.current.addFilters(filters);
       }
 
       // Create Containers
-      const rootNC = new nestCon(NCO);
-      rootNCRef.current = rootNC;
-      rootNC.container.position.set(parentWidth / 2, parentWidth / 2);
-      appRef.current.stage.addChild(rootNC.container);
+      rootNCRef.current = new spinCon(NCO);
+      rootNCRef.current.container.position.set(0, 0);
+      ACRef.current.refreshZoom();
+      ACRef.current.addChild(rootNCRef.current.container);
 
       // Updates Canvas on time interval to spin
-      appRef.current.ticker.add((time) => {
-        rootNC.motion(0.001 * time.deltaTime);
+      ACRef.current.app.ticker.add((time) => {
+        if (rootNCRef.current) {
+          rootNCRef.current.motion(0.001 * time.deltaTime);
+        }
       });
     })();
   }, [parentWidth]);

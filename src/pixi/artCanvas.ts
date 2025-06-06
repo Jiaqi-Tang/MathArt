@@ -1,22 +1,52 @@
 import { Application, BlurFilter, Filter } from "pixi.js";
+import { Viewport } from "pixi-viewport";
+
 import { BloomFilter, ShockwaveFilter, SimplexNoiseFilter } from "pixi-filters";
+
+interface ArtCanvasConfig {
+  canvas: HTMLCanvasElement;
+  height: number;
+  width: number;
+  background?: string;
+  zoom?: boolean;
+}
 
 // ArtCanvas object which is the Background of an Art Piece
 // Will be used for different type of art (spinArt, growArt, and others to be developed)
 export class ArtCanvas {
   public app: Application;
+  public viewport: Viewport | null;
+  private zoom: boolean;
 
   private constructor() {
     this.app = new Application();
+    this.viewport = null;
+    this.zoom = false;
+  }
+
+  private addZoom(width: number, height: number, zoom: boolean) {
+    this.zoom = zoom;
+    if (this.viewport) this.viewport.destroy();
+
+    this.viewport = new Viewport({
+      screenWidth: width,
+      screenHeight: height,
+      events: this.app.renderer.events,
+    });
+    if (zoom) {
+      this.viewport.drag().pinch().wheel();
+    }
+    this.app.stage.addChild(this.viewport);
   }
 
   // Creates ArtCanvas object
-  public static async create(
-    canvas: HTMLCanvasElement,
-    height: number,
-    width: number,
-    background?: string
-  ): Promise<ArtCanvas> {
+  public static async create({
+    canvas,
+    height,
+    width,
+    background,
+    zoom,
+  }: ArtCanvasConfig): Promise<ArtCanvas> {
     const instance = new ArtCanvas();
     instance.app = new Application();
     await instance.app.init({
@@ -25,8 +55,29 @@ export class ArtCanvas {
       width: width,
       height: height,
     });
+
+    instance.addZoom(width, height, zoom ?? false);
+
     instance.app.stage.filters = [];
+
     return instance;
+  }
+
+  refreshZoom() {
+    if (!this.viewport) return;
+
+    this.viewport.setZoom(1);
+    this.viewport.moveCenter(0, 0);
+  }
+
+  addChild(child: any) {
+    if (!this.viewport) return;
+    this.viewport.addChild(child);
+  }
+
+  removeChild(child: any) {
+    if (!this.viewport) return;
+    this.viewport.removeChild(child);
   }
 
   // For adding filters without reconstruction

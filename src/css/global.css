@@ -512,6 +512,14 @@ a.nav-title:hover {
   background-color: #413677;
 }
 
+.art-control-btn {
+  margin: 4px;
+  background-color: #aaa;
+  color: white;
+  padding: 6px;
+  cursor: pointer;
+}
+
 .button-art-page-link {
   display: inline-block;
   padding: 10px;
