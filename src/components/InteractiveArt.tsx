@@ -9,6 +9,7 @@ interface Prop {
   layers: number;
   children: number;
   shape: number;
+  func: number;
   colour: string;
   filters: string[];
 }
@@ -18,6 +19,7 @@ const CANVAS_FILTERS = ["blur", "bloom", "noise"];
 const NESTCON_FILTERS = ["glow", "outline"];
 export const AVALIABLE_FILTERS = [...CANVAS_FILTERS, ...NESTCON_FILTERS];
 export const AVALIABLE_SHAPES = [0, 1, 2, 3, 4];
+export const AVALIABLE_FUNCTIONS = [0, 1, 2, 3];
 
 // Interactive Spin Art Component
 export default function SpinArtInteractive({
@@ -25,6 +27,7 @@ export default function SpinArtInteractive({
   layers,
   children,
   shape,
+  func,
   colour,
   filters,
 }: Prop) {
@@ -121,10 +124,18 @@ export default function SpinArtInteractive({
       radius: parentWidth / 80,
       numChildren: children,
       colour: colour,
+      motionFunc: func,
+      shape: shape,
     });
     rootNCRef.current.container.position.set(0, 0);
     ACRef.current.addChild(rootNCRef.current.container);
-  }, [layers, children]);
+
+    for (const filter of filters) {
+      if (NESTCON_FILTERS.includes(filter)) {
+        rootNCRef.current.addFilters([filter]);
+      }
+    }
+  }, [layers, children, func]);
 
   // User time interaction for Filter Update
   useEffect(() => {

@@ -119,29 +119,76 @@ export class spinCon {
         };
         break;
       }
-      // case 2:
-      // {
-      //   this.moveControl = 1;
-      //   this.motionFunc = function(scale){
-      //     const containerAngle = 2 * Math.PI / this.numChildren;
-      //     for(let i = 0; i < this.children.length; i++){
-      //       const childCon = this.children[i].container;
+      case 2: {
+        // Works but glitchy, likely computational / rounding stuff
+        this.motionFunc = function (scale) {
+          const containerAngle = (2 * Math.PI) / this.numChildren;
+          for (let i = 0; i < this.children.length; i++) {
+            const childCon = this.children[i].container;
+            const theta = -1 * i * containerAngle;
+            const s = ((3 / 2) * Math.PI) / this.distance;
+            const tx = (1 / 2) * Math.PI;
 
-      //       const expX = (2 * this.distance / 3) * Math.cos(i * containerAngle);
-      //       const expY = (2 * this.distance / 3) * Math.sin(i * containerAngle);
+            var radians =
+              s *
+                (childCon.x * Math.cos(theta) - childCon.y * Math.sin(theta)) +
+              tx;
 
-      //       const rotationAngle = Math.atan2(childCon.y - expY, childCon.x - expX);
+            // console.log(radians);
 
-      //       childCon.x = expX + (this.distance / 3) * Math.cos(rotationAngle + 7 * this.layer * scale);
-      //       childCon.y = expY + (this.distance / 3) * Math.sin(rotationAngle + 7 * this.layer * scale);
-      //     }
+            radians = radians + 10 * this.layer * this.moveControl * scale;
+            if (radians < 0) {
+              this.moveControl = 1;
+            } else if (radians > 2 * Math.PI) {
+              this.moveControl = -1;
+            }
 
-      //     this.container.rotation += this.layer * this.layer * scale;
-      //   }
-      //   break;
-      // }
+            childCon.x =
+              ((radians - tx) * Math.cos(theta) +
+                this.moveControl * Math.sin(radians) * Math.sin(theta)) /
+              s;
+            childCon.y =
+              ((radians - tx) * -1 * Math.sin(theta) +
+                this.moveControl * Math.sin(radians) * Math.cos(theta)) /
+              s;
+          }
+
+          this.container.rotation += ((this.layer * this.layer) / 10) * scale;
+        };
+        break;
+      }
+      case 3: {
+        this.motionFunc = function (scale) {
+          const angle = (2 * Math.PI) / this.numChildren;
+
+          const maxDist = (0.5 + 8 / Math.pow(this.layer, 2)) * this.distance;
+          const minDist = (1 / this.layer) * this.distance;
+
+          for (let i = 0; i < this.children.length; i++) {
+            const child = this.children[i];
+            const childContainer = child.container;
+            const curDist = Math.sqrt(
+              Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)
+            );
+            if (curDist >= maxDist) {
+              this.moveControl = -1;
+            } else if (curDist <= minDist) {
+              this.moveControl = 1;
+            }
+
+            const moveDist =
+              30 *
+              (this.moveControl * Math.pow(this.distance, 2 / 3) + this.layer) *
+              scale;
+            childContainer.x += moveDist * Math.cos(i * angle);
+            childContainer.y += moveDist * Math.sin(i * angle);
+          }
+
+          this.container.rotation += this.layer * this.layer * scale;
+        };
+        break;
+      }
       default: {
-        this.moveControl = -1;
         this.motionFunc = function (scale) {
           const angle = (2 * Math.PI) / this.numChildren;
 

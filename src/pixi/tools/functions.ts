@@ -6,6 +6,10 @@ export function drawShape(
   scale: number,
   colour: string
 ) {
+  if (shape == -1) {
+    shape = Math.floor(Math.random() * 5);
+    console.log(shape);
+  }
   switch (shape) {
     case 1: {
       // Rectangle

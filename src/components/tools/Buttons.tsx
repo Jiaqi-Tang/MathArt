@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { Application, Graphics } from "pixi.js";
 import { drawShape } from "../../pixi/tools/functions";
+import { SpinArtPreview } from "../Preview";
 
 interface ShapeButtonProps {
   size: number;
@@ -67,6 +68,25 @@ export function FilterButton({ name, filters, onClick }: FilterButtonProps) {
       }`}
     >
       {name}
+    </button>
+  );
+}
+
+interface SpinButtonProps {
+  size: number;
+  name: number;
+  func: number;
+  onClick: (name: number) => void;
+}
+
+export function SpinButton({ size, name, func, onClick }: SpinButtonProps) {
+  return (
+    <button
+      onClick={() => onClick(func)}
+      className={`art-control-btn shape-btn${name == func ? " active" : ""}`}
+      style={{ height: size, width: size }}
+    >
+      <SpinArtPreview options={{ layers: 2, motionFunc: name }} />
     </button>
   );
 }

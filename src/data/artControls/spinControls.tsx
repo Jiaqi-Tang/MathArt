@@ -3,8 +3,13 @@ import { HexColorPicker } from "react-colorful";
 import SpinArtInteractive, {
   AVALIABLE_FILTERS,
   AVALIABLE_SHAPES,
+  AVALIABLE_FUNCTIONS,
 } from "../../components/InteractiveArt";
-import { ShapeButton, FilterButton } from "../../components/tools/Buttons";
+import {
+  ShapeButton,
+  FilterButton,
+  SpinButton,
+} from "../../components/tools/Buttons";
 
 // Control pannel for the Interactive Spin Art Page
 export function spinArtControls() {
@@ -15,13 +20,7 @@ export function spinArtControls() {
   const [colour, setColour] = useState("#ffffff");
   const [filters, setActiveFilters] = useState<string[]>([]);
   const [shape, setShape] = useState(0);
-
-  // Button toggle
-  const toggleFilter = (name: string) => {
-    setActiveFilters((prev) =>
-      prev.includes(name) ? prev.filter((f) => f !== name) : [...prev, name]
-    );
-  };
+  const [func, setFunc] = useState(0);
 
   return {
     // Returns Components for controls
@@ -32,6 +31,7 @@ export function spinArtControls() {
         layers={numLayers}
         children={numChildren}
         shape={shape}
+        func={func}
         colour={colour}
         filters={filters}
       />
@@ -95,6 +95,22 @@ export function spinArtControls() {
                 shape={shape}
                 colour="white"
                 onClick={() => setShape(avaliableShape)}
+              />
+            ))}
+          </div>
+        ),
+      },
+      {
+        description: "Motion:",
+        input: (
+          <div className="art-controls-btn-wrapper">
+            {AVALIABLE_FUNCTIONS.map((avaliableFunc) => (
+              <SpinButton
+                key={avaliableFunc}
+                size={30}
+                name={avaliableFunc}
+                func={func}
+                onClick={() => setFunc(avaliableFunc)}
               />
             ))}
           </div>
