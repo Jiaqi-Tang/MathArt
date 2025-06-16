@@ -32,7 +32,7 @@ export function SpinArtPreview({ options, filters }: PreviewOptions) {
   useEffect(() => {
     if (!canvasRef.current || parentWidth === null) return;
 
-    NCO.radius = parentWidth / 80;
+    NCO.radius = options.radius ?? parentWidth / 80;
     const canvas = canvasRef.current;
 
     (async () => {

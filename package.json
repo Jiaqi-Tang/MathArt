@@ -1,8 +1,9 @@
 {
   "name": "mathart",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "homepage": "https://jiaqi-tang.github.io/MathArt/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

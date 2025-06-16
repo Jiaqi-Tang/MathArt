@@ -107,7 +107,7 @@ export function spinArtControls() {
             {AVALIABLE_FUNCTIONS.map((avaliableFunc) => (
               <SpinButton
                 key={avaliableFunc}
-                size={30}
+                size={50}
                 name={avaliableFunc}
                 func={func}
                 onClick={() => setFunc(avaliableFunc)}

@@ -86,7 +86,7 @@ export function SpinButton({ size, name, func, onClick }: SpinButtonProps) {
       className={`art-control-btn shape-btn${name == func ? " active" : ""}`}
       style={{ height: size, width: size }}
     >
-      <SpinArtPreview options={{ layers: 2, motionFunc: name }} />
+      <SpinArtPreview options={{ layers: 2, motionFunc: name, radius: 5 }} />
     </button>
   );
 }
