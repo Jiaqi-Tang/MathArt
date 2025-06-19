@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { featuredGalleries } from "../data/galleries/featured";
-
+import { useTileObserver } from "./tools/functions";
 interface GalleryPreview {
   name: string;
   preview: ReactNode;
@@ -14,6 +14,7 @@ interface Prop {
 
 // Gallery Page Component
 export default function InfoPage() {
+  useTileObserver();
   return <InfoPageContent galleries={featuredGalleries.galleries} />;
 }
 

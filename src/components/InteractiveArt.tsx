@@ -180,6 +180,8 @@ export default function SpinArtInteractive({
 
   return (
     // Wrapper for accessing parent width
-    <div ref={wrapperRef}>{parentWidth && <canvas ref={canvasRef} />}</div>
+    <div className="interactive__art" ref={wrapperRef}>
+      {parentWidth && <canvas ref={canvasRef} />}
+    </div>
   );
 }

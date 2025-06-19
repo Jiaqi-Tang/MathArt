@@ -7,10 +7,7 @@ export const spinGalleryData = {
     name: "The Classic",
     description: (
       <>
-        <p>
-          Ever wondered what nested spinning looks like but was unable to
-          simulate it inside your head? Now you've seen it!
-        </p>
+        <p>This Gallery explores the Artistic potential of nested spining</p>
         <p>The Classic Spin Art is composed of two simple motions:</p>
         <ul>
           <li>Each child spins around the parent at contant speed</li>
@@ -65,6 +62,20 @@ export const spinGalleryData = {
         <SpinArtPreview
           options={{ numChildren: 8, shape: 1, colour: "ff0000" }}
           filters={["noise", "blur"]}
+        />
+      ),
+    },
+    {
+      name: "The Absolute Chaos",
+      preview: (
+        <SpinArtPreview
+          options={{
+            numChildren: 7,
+            shape: -1,
+            motionFunc: 3,
+            colour: "-1",
+            filters: ["outline"],
+          }}
         />
       ),
     },

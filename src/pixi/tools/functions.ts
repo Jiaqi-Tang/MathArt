@@ -6,10 +6,13 @@ export function drawShape(
   scale: number,
   colour: string
 ) {
+  if (colour == "-1") {
+    colour = getRandomColor();
+  }
   if (shape == -1) {
     shape = Math.floor(Math.random() * 5);
-    console.log(shape);
   }
+
   switch (shape) {
     case 1: {
       // Rectangle
@@ -78,4 +81,26 @@ export function drawShape(
       g.clear().circle(0, 0, scale).fill(colour);
     }
   }
+}
+
+function getRandomColor(): string {
+  let color: string;
+  let brightness: number;
+
+  do {
+    // Generate random R, G, B
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+
+    // Calculate perceived brightness using luminance formula
+    brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+
+    // Convert to hex
+    color = `#${r.toString(16).padStart(2, "0")}${g
+      .toString(16)
+      .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+  } while (brightness < 180); // tweak threshold for desired brightness
+
+  return color;
 }

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Application, Graphics } from "pixi.js";
 import { drawShape } from "../../pixi/tools/functions";
 import { SpinArtPreview } from "../Preview";
@@ -46,7 +46,9 @@ export function ShapeButton({
     <button
       key={name}
       onClick={() => onClick(shape)}
-      className={`art-control-btn shape-btn${name == shape ? " active" : ""}`}
+      className={`art-control-btn graphic-btn shape-btn${
+        name == shape ? " active" : ""
+      }`}
     >
       <canvas ref={canvasRef}></canvas>
     </button>
@@ -63,7 +65,7 @@ export function FilterButton({ name, filters, onClick }: FilterButtonProps) {
   return (
     <button
       onClick={() => onClick(name)}
-      className={`art-control-btn filter-btn${
+      className={`art-control-btn text-btn filter-btn${
         filters.includes(name) ? " active" : ""
       }`}
     >
@@ -83,10 +85,60 @@ export function SpinButton({ size, name, func, onClick }: SpinButtonProps) {
   return (
     <button
       onClick={() => onClick(func)}
-      className={`art-control-btn shape-btn${name == func ? " active" : ""}`}
+      className={`art-control-btn graphic-btn motion-btn${
+        name == func ? " active" : ""
+      }`}
       style={{ height: size, width: size }}
     >
       <SpinArtPreview options={{ layers: 2, motionFunc: name, radius: 5 }} />
     </button>
+  );
+}
+
+interface NumberInputProps {
+  value: number;
+  setValue: (value: number) => void;
+  min: number;
+  max: number;
+}
+
+export function NumberInput({
+  value,
+  setValue,
+  min = 2,
+  max = 8,
+}: NumberInputProps) {
+  const [inputNumChildren, setInputNumChildren] = useState(value.toString());
+  const lastKeyPressed = useRef<string | null>(null);
+
+  const applyNumChildren = () => {
+    let num = parseInt(inputNumChildren, 10);
+    if (isNaN(num)) {
+      num = value; // revert to last valid value
+    }
+    num = Math.min(max, Math.max(min, num));
+    setValue(num);
+    setInputNumChildren(num.toString()); // update display after apply
+  };
+
+  return (
+    <input
+      className="input__box"
+      type="number"
+      min={min}
+      max={max}
+      value={inputNumChildren}
+      onChange={(e) => {
+        setInputNumChildren(e.target.value);
+      }}
+      onKeyDown={(e) => {
+        lastKeyPressed.current = e.key;
+        if (e.key === "Enter") {
+          applyNumChildren();
+        }
+        if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
+      }}
+      onBlur={applyNumChildren}
+    />
   );
 }

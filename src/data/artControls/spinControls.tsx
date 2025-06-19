@@ -6,14 +6,15 @@ import SpinArtInteractive, {
   AVALIABLE_FUNCTIONS,
 } from "../../components/InteractiveArt";
 import {
+  NumberInput,
   ShapeButton,
   FilterButton,
   SpinButton,
 } from "../../components/tools/Buttons";
 
-// Control pannel for the Interactive Spin Art Page
+// Control panel for the Interactive Spin Art Page
 export function spinArtControls() {
-  // Refs
+  // Main art state
   const [spinSpeed, setSpinSpeed] = useState(1);
   const [numChildren, setNumChildren] = useState(6);
   const [numLayers, setNumLayers] = useState(4);
@@ -22,8 +23,23 @@ export function spinArtControls() {
   const [shape, setShape] = useState(0);
   const [func, setFunc] = useState(0);
 
+  // Local input state for numChildren
+  const [inputNumChildren, setInputNumChildren] = useState(
+    numChildren.toString()
+  );
+
+  const applyNumChildren = () => {
+    const parsed = parseInt(inputNumChildren, 10);
+    if (!isNaN(parsed)) {
+      const clamped = Math.max(2, Math.min(8, parsed));
+      setNumChildren(clamped);
+      setInputNumChildren(clamped.toString());
+    } else {
+      setInputNumChildren(numChildren.toString()); // revert if invalid
+    }
+  };
+
   return {
-    // Returns Components for controls
     title: "Spin Art",
     art: (
       <SpinArtInteractive
@@ -48,34 +64,31 @@ export function spinArtControls() {
               step="0.1"
               value={spinSpeed}
               onChange={(e) => setSpinSpeed(parseFloat(e.target.value))}
-            />{" "}
-            {spinSpeed}x
+              className="range-slider"
+            />
+            <span className="range-value">{spinSpeed.toFixed(1)}x</span>
           </>
         ),
       },
       {
         description: "Children:",
         input: (
-          <input
-            className="input__box"
-            type="number"
-            min="0"
-            max="10"
+          <NumberInput
             value={numChildren}
-            onChange={(e) => setNumChildren(parseInt(e.target.value))}
+            setValue={setNumChildren}
+            min={2}
+            max={8}
           />
         ),
       },
       {
         description: "Layers:",
         input: (
-          <input
-            className="input__box"
-            type="number"
-            min="1"
-            max="6"
+          <NumberInput
             value={numLayers}
-            onChange={(e) => setNumLayers(parseInt(e.target.value))}
+            setValue={setNumLayers}
+            min={2}
+            max={6}
           />
         ),
       },

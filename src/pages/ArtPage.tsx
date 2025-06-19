@@ -4,7 +4,7 @@ import { spinArtControls } from "../data/artControls/spinControls";
 
 interface Control {
   description: string;
-  input: ReactNode; 
+  input: ReactNode;
 }
 
 interface Prop {
@@ -20,25 +20,21 @@ export default function ArtPage() {
   if (id === "spin-classic") {
     const SAC = spinArtControls();
     return (
-      <ArtPageContent 
-        title={SAC.title}
-        art={SAC.art}
-        controls={SAC.controls}/>
+      <ArtPageContent title={SAC.title} art={SAC.art} controls={SAC.controls} />
     );
-  }else{
+  } else {
     return <div>Artwork Note Found.</div>;
   }
 }
 
 // Helper function for better abstraction
-function ArtPageContent({title, art, controls}: Prop) {
+function ArtPageContent({ title, art, controls }: Prop) {
   return (
-    <section className="featured-display">
-      <div className="interactive">
-        <div className="interactive__controls">
-          <h1 className="section-head">{title}</h1>
-          <div >
-            {controls.map((control, idx) => (
+    <section className="interactive">
+      <div className="interactive__controls">
+        <h1 className="section-head">{title}</h1>
+        <div>
+          {controls.map((control, idx) => (
             <div className="control" key={idx}>
               <div className="control__description">{control.description}</div>
               <div className="control__input">
@@ -46,12 +42,9 @@ function ArtPageContent({title, art, controls}: Prop) {
               </div>
             </div>
           ))}
-          </div>
-        </div>
-        <div className="interactive__art">
-          {art}
         </div>
       </div>
+      {art}
     </section>
   );
 }
