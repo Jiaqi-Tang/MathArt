@@ -37,9 +37,7 @@ function ArtPageContent({ title, art, controls }: Prop) {
           {controls.map((control, idx) => (
             <div className="control" key={idx}>
               <div className="control__description">{control.description}</div>
-              <div className="control__input">
-                <label>{control.input}</label>
-              </div>
+              <div className="control__input">{control.input}</div>
             </div>
           ))}
         </div>

@@ -243,6 +243,10 @@ ol {
   margin-left: 1.17647em
 }
 
+a {
+  text-decoration: none;
+}
+
 ul ul,
 ul ol,
 ol ul,
@@ -269,7 +273,7 @@ li li {
 header{
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 9997;
 }
 
 .nav {
@@ -278,7 +282,6 @@ header{
   left: 0;
   width: 100%;
   min-width: 1024px;
-  z-index: 9997;
   height: 3.5rem;
   backdrop-filter: saturate(180%) blur(20px);
   background-color: rgba(0, 0, 0, 0.7);
@@ -298,25 +301,39 @@ header{
   z-index: -1;
 }
 
-.nav-title {
-  color: var(--text-primary);
-  font-size: 30px;
-  line-height: 1.14286;
-  font-weight: 600;
-  letter-spacing: 0.011em;
-  cursor: default;
-  display: block;
-  float: left;
-  margin: 6px 0 -18px;
-  padding: 0;
-  height: 52px;
-  white-space: nowrap;
+.nav-title-wrapper {
+  padding-left: 0.5rem;
+  padding-right: 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center; /* vertically centers logo and text */
+  text-decoration: none; /* optional: removes underline */
   transition: transform 0.2s ease;
 }
 
-.nav-title:hover {
+.nav-title-wrapper:hover {
   cursor: pointer;
-  transform: scale(1.04);
+  transform: scale(1.03);
+  background-color: var(--item-primary);
+}
+
+.nav-title {
+  color: var(--text-primary);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.011em;
+  cursor: default;
+  white-space: nowrap;
+  height: 52px; /* optional */
+  display: block; /* or inline-block */
+  padding: 0 0 0 10px; /* optional spacing from logo */
+  margin-top: 0.35rem;
+}
+
+.nav-logo {
+  height: 3rem;
+  object-fit: contain; /* or 'cover' if you want it to fill the area more tightly */
+  display: block;
 }
 
 .nav-item-content {
@@ -342,7 +359,7 @@ header{
   width: 100%;
   height: auto;
   min-height: 100%;
-  z-index: 1;
+  /* z-index: 101; */
 }
 
 .nav-content-wrapper {
@@ -350,7 +367,7 @@ header{
   max-width: 980px;
   padding: 0 22px;
   position: relative;
-  z-index: 2;
+  /* z-index: 102; */
 }
 
 .nav-content {
@@ -358,11 +375,7 @@ header{
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
-  margin: 8px;
-}
-
-.nav-content a{
-  text-decoration: none;
+  margin: 2px;
 }
 
 .nav-menu {
@@ -427,6 +440,84 @@ header{
   transform: translateX(4px);
 }
 
+
+
+
+section{
+  padding-top: 20px;
+  padding-bottom: 80px;
+  overflow: hidden;
+  margin-top: 10;
+}
+
+
+.home-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 75vh;
+  text-align: center;
+  position: relative; /* Needed to keep content on top of the background */
+  overflow: hidden; /* Hides the parts of the gradients that move outside the section */
+}
+
+/* --- New styles for the dynamic background --- */
+.home-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1; /* Places the pseudo-element behind the content */
+  
+  /* Define multiple radial gradients for the nebula effect */
+  background: 
+    radial-gradient(circle at 15% 35%, rgba(142, 45, 226, 0.6), transparent 40%),
+    radial-gradient(circle at 85% 65%, rgba(74, 0, 224, 0.6), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 0, 128, 0.5), transparent 30%),
+    radial-gradient(circle at 30% 80%, rgba(0, 242, 255, 0.5), transparent 40%);
+
+  /* Set a dark background color */
+  background-color: #0c0a1f; 
+
+  /* Define the animation */
+  animation: moveGradients 2s ease-in-out infinite alternate;
+}
+
+/* Keyframes to animate the background positions */
+@keyframes moveGradients {
+  0% {
+    background-position: 0% 0%, 100% 100%, 50% 50%, 20% 90%;
+  }
+  100% {
+    background-position: 20% 20%, 80% 80%, 60% 40%, 0% 100%;
+  }
+}
+
+/* --- Styles for your content to ensure it's visible --- */
+.home-section-content {
+  position: relative; /* Ensures this content stays on top */
+  z-index: 2; /* Higher z-index than the pseudo-element */
+  color: #ffffff; /* White text for better contrast */
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow to the text */
+}
+
+
+.home-logo {
+  width: 50vh; /* adjust size as needed */
+  height: auto;
+  padding-bottom: 40px;
+  filter: drop-shadow(0px 10px 14px rgba(0, 0, 0, 0.4));
+}
+
+.featured {
+  background-color: var(--background-primary);
+}
+
+.variations {
+  background-color: var(--background-secondary-odd);
+}
 
 .main {
   padding: 0;
@@ -685,20 +776,6 @@ header{
   overflow: hidden
 }
 
-
-.featured-display {
-  padding-bottom: 80px;
-  overflow: hidden;
-  background-color: var(--background-primary);
-  margin-top: 10;
-}
-
-.variations {
-  padding-bottom: 80px;
-  overflow: hidden;
-  background-color: var(--background-secondary-odd);
-  margin-top: 10;
-}
 
 .section-content {
   margin-left: auto;

@@ -3,7 +3,7 @@ import "./css/global.css";
 import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 // import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
-import InfoPage from "./pages/InfoPages.js";
+import HomePage from "./pages/HomePage.js";
 import GalleryPage from "./pages/GalleryPage.js";
 import ArtPage from "./pages/ArtPage";
 import AboutPage from "./pages/AboutPage";
@@ -18,7 +18,7 @@ function AppContent() {
     <>
       {!hideHeader && <Header />}
       <Routes>
-        <Route path="/" element={<InfoPage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/gallery/:id" element={<GalleryPage />} />
         <Route path="/art/:id" element={<ArtPage />} />
         <Route path="/about" element={<AboutPage />} />

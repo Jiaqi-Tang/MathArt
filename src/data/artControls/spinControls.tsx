@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import debounce from "lodash.debounce"; // or from another debounce library
+
 import { HexColorPicker } from "react-colorful";
 import SpinArtInteractive, {
   AVALIABLE_FILTERS,
@@ -6,10 +8,12 @@ import SpinArtInteractive, {
   AVALIABLE_FUNCTIONS,
 } from "../../components/InteractiveArt";
 import {
+  ZoomButton,
   NumberInput,
   ShapeButton,
   FilterButton,
   SpinButton,
+  ChaosButton,
 } from "../../components/tools/Buttons";
 
 // Control panel for the Interactive Spin Art Page
@@ -22,22 +26,14 @@ export function spinArtControls() {
   const [filters, setActiveFilters] = useState<string[]>([]);
   const [shape, setShape] = useState(0);
   const [func, setFunc] = useState(0);
+  const [zoom, triggerZoom] = useState(false);
+
+  const [isPicking, setIsPicking] = useState(false);
 
   // Local input state for numChildren
   const [inputNumChildren, setInputNumChildren] = useState(
     numChildren.toString()
   );
-
-  const applyNumChildren = () => {
-    const parsed = parseInt(inputNumChildren, 10);
-    if (!isNaN(parsed)) {
-      const clamped = Math.max(2, Math.min(8, parsed));
-      setNumChildren(clamped);
-      setInputNumChildren(clamped.toString());
-    } else {
-      setInputNumChildren(numChildren.toString()); // revert if invalid
-    }
-  };
 
   return {
     title: "Spin Art",
@@ -50,9 +46,14 @@ export function spinArtControls() {
         func={func}
         colour={colour}
         filters={filters}
+        onZoom={zoom}
       />
     ),
     controls: [
+      {
+        description: "Zoom:",
+        input: <ZoomButton onClick={() => triggerZoom(!zoom)} />,
+      },
       {
         description: "Speed:",
         input: (
@@ -94,22 +95,54 @@ export function spinArtControls() {
       },
       {
         description: "Shape Color:",
-        input: <HexColorPicker color={colour} onChange={setColour} />,
+        input: (
+          <div className="art-controls-btn-wrapper">
+            <HexColorPicker
+              color={colour}
+              onChange={(c) => {
+                setIsPicking(true);
+                setColour(c);
+              }}
+              onMouseUp={() => setIsPicking(false)}
+              onTouchEnd={() => setIsPicking(false)}
+            />
+            <div className="btn-wrapper">
+              <ChaosButton
+                name={"-1"}
+                value={colour}
+                type="colour-btn"
+                onClick={() => {
+                  if (!isPicking) setColour("-1");
+                }}
+              />
+            </div>
+          </div>
+        ),
       },
       {
         description: "Shapes:",
         input: (
           <div className="art-controls-btn-wrapper">
             {AVALIABLE_SHAPES.map((avaliableShape) => (
-              <ShapeButton
-                key={avaliableShape}
-                size={30}
-                name={avaliableShape}
-                shape={shape}
-                colour="white"
-                onClick={() => setShape(avaliableShape)}
-              />
+              <div className="btn-wrapper">
+                <ShapeButton
+                  key={avaliableShape}
+                  size={30}
+                  name={avaliableShape}
+                  shape={shape}
+                  colour="white"
+                  onClick={() => setShape(avaliableShape)}
+                />
+              </div>
             ))}
+            <div className="btn-wrapper">
+              <ChaosButton
+                name={-1}
+                value={shape}
+                type="shape-btn"
+                onClick={() => setShape(-1)}
+              />
+            </div>
           </div>
         ),
       },
@@ -118,13 +151,15 @@ export function spinArtControls() {
         input: (
           <div className="art-controls-btn-wrapper">
             {AVALIABLE_FUNCTIONS.map((avaliableFunc) => (
-              <SpinButton
-                key={avaliableFunc}
-                size={50}
-                name={avaliableFunc}
-                func={func}
-                onClick={() => setFunc(avaliableFunc)}
-              />
+              <div className="btn-wrapper">
+                <SpinButton
+                  key={avaliableFunc}
+                  size={50}
+                  name={avaliableFunc}
+                  func={func}
+                  onClick={() => setFunc(avaliableFunc)}
+                />
+              </div>
             ))}
           </div>
         ),
@@ -134,18 +169,20 @@ export function spinArtControls() {
         input: (
           <div className="art-controls-btn-wrapper">
             {AVALIABLE_FILTERS.map((filterName) => (
-              <FilterButton
-                key={filterName}
-                name={filterName}
-                filters={filters}
-                onClick={() =>
-                  setActiveFilters((prev) =>
-                    prev.includes(filterName)
-                      ? prev.filter((f) => f !== filterName)
-                      : [...prev, filterName]
-                  )
-                }
-              />
+              <div className="btn-wrapper">
+                <FilterButton
+                  key={filterName}
+                  name={filterName}
+                  filters={filters}
+                  onClick={() =>
+                    setActiveFilters((prev) =>
+                      prev.includes(filterName)
+                        ? prev.filter((f) => f !== filterName)
+                        : [...prev, filterName]
+                    )
+                  }
+                />
+              </div>
             ))}
           </div>
         ),

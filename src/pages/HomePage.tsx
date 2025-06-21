@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { featuredGalleries } from "../data/galleries/featured";
 import { useTileObserver } from "./tools/functions";
+import logo from "../assets/logo.png";
+
 interface GalleryPreview {
   name: string;
   preview: ReactNode;
@@ -13,22 +15,25 @@ interface Prop {
 }
 
 // Gallery Page Component
-export default function InfoPage() {
+export default function HomePage() {
   useTileObserver();
-  return <InfoPageContent galleries={featuredGalleries.galleries} />;
+  return <HomePageContent galleries={featuredGalleries.galleries} />;
 }
 
 // Component for Information Page
-export function InfoPageContent({ galleries }: Prop) {
+export function HomePageContent({ galleries }: Prop) {
   return (
     <main>
-      <section className="featured-display">
-        <div className="section-content">
+      <section className="home-section">
+        <div className="section-content home-section-content">
+          <img src={logo} alt="Math Art Logo" className="home-logo" />
           <h1 className="section-head">Welcome to Math Art!</h1>
-          <p>This is a place where mathematical art meets interactivity.</p>
+          <p className="section-subhead">
+            This is a place where mathematical art meets interactivity.
+          </p>
         </div>
       </section>
-      <section className="variations">
+      <section className="featured featured-galleries">
         <div className="section-content">
           <h1 className="section-head">Featured Galleries</h1>
           <ul role="list" className="section-tiles">

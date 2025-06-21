@@ -12,6 +12,7 @@ interface Prop {
   func: number;
   colour: string;
   filters: string[];
+  onZoom: boolean;
 }
 
 // List of Valid Filters
@@ -30,6 +31,7 @@ export default function SpinArtInteractive({
   func,
   colour,
   filters,
+  onZoom,
 }: Prop) {
   // Refs
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -174,9 +176,18 @@ export default function SpinArtInteractive({
     spinSpeed.current = speed;
   }, [speed]);
 
+  // User time interaction for Colout and Shape updates
   useEffect(() => {
-    rootNCRef.current?.setShape((shape = shape), (colour = colour));
-  }, [colour, shape]);
+    rootNCRef.current?.setShape({ colour: colour });
+  }, [colour]);
+
+  useEffect(() => {
+    rootNCRef.current?.setShape({ shape_num: shape });
+  }, [shape]);
+
+  useEffect(() => {
+    ACRef.current?.refreshZoom();
+  }, [onZoom]);
 
   return (
     // Wrapper for accessing parent width

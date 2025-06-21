@@ -12,6 +12,7 @@
     "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
@@ -21,6 +22,7 @@
     "vite-plugin-gh-pages": "^1.0.1"
   },
   "dependencies": {
+    "lodash.debounce": "^4.0.8",
     "pixi-filters": "^6.1.2",
     "pixi-viewport": "^6.0.3",
     "pixi.js": "^8.9.1",

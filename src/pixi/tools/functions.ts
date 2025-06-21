@@ -81,6 +81,7 @@ export function drawShape(
       g.clear().circle(0, 0, scale).fill(colour);
     }
   }
+  return [shape, colour];
 }
 
 function getRandomColor(): string {

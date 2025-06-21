@@ -45,7 +45,7 @@ function GalleryPageContent({ title, featured, gallery }: Prop) {
   return (
     <>
       {/* Featured Art Piece at the top of the Gallery */}
-      <section className="featured-display">
+      <section className="featured featured-display">
         <div className="section-content">
           <h1 className="section-head">{title}</h1>
           <ul role="list" className="section-tiles">

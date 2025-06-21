@@ -3,12 +3,50 @@ import { Application, Graphics } from "pixi.js";
 import { drawShape } from "../../pixi/tools/functions";
 import { SpinArtPreview } from "../Preview";
 
+interface ChaosButtonProps {
+  name: any;
+  value: any;
+  type: string;
+  onClick: () => void;
+}
+
+export function ChaosButton({ name, value, type, onClick }: ChaosButtonProps) {
+  return (
+    <button
+      key={name}
+      onClick={() => onClick()}
+      className={`art-control-btn text-btn chaos-btn${" " + type}${
+        name == value ? " active" : ""
+      }`}
+    >
+      Chaos
+    </button>
+  );
+}
+
+interface ZoomButtonProps {
+  onClick: () => void;
+}
+
+export function ZoomButton({ onClick }: ZoomButtonProps) {
+  return (
+    <button
+      className="art-control-btn zoom-btn text-btn"
+      onClick={() => {
+        onClick();
+      }}
+    >
+      Reset Zoom
+    </button>
+  );
+}
+
 interface ShapeButtonProps {
   size: number;
   name: number;
   shape: number;
   colour: string;
-  onClick: (name: number) => void;
+  onClick: () => void;
 }
 
 export function ShapeButton({
@@ -45,7 +83,7 @@ export function ShapeButton({
   return (
     <button
       key={name}
-      onClick={() => onClick(shape)}
+      onClick={() => onClick()}
       className={`art-control-btn graphic-btn shape-btn${
         name == shape ? " active" : ""
       }`}
@@ -58,13 +96,13 @@ export function ShapeButton({
 interface FilterButtonProps {
   name: string;
   filters: string[];
-  onClick: (name: string) => void;
+  onClick: () => void;
 }
 
 export function FilterButton({ name, filters, onClick }: FilterButtonProps) {
   return (
     <button
-      onClick={() => onClick(name)}
+      onClick={() => onClick()}
       className={`art-control-btn text-btn filter-btn${
         filters.includes(name) ? " active" : ""
       }`}

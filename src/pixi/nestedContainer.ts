@@ -13,6 +13,11 @@ export interface NestConOptions {
   effects?: string[]; // To be implemented
 }
 
+interface setShapeProps {
+  shape_num?: number;
+  colour?: string;
+}
+
 // Nested containers class whihc is the core part for Spin Art
 // Each shape is added to its parent's container so they can be spun
 export class spinCon {
@@ -53,7 +58,14 @@ export class spinCon {
 
     this.shape = new Graphics();
     this.container.addChild(this.shape);
-    drawShape(this.shape, this.shape_num, this.radius, this.colour);
+    const temp = drawShape(
+      this.shape,
+      this.shape_num,
+      this.radius,
+      this.colour
+    );
+    this.shape_num = Number(temp[0]);
+    this.colour = String(temp[1]);
 
     // Adds Filters
     this.shape.filters = [];
@@ -227,13 +239,20 @@ export class spinCon {
     }
   }
 
-  setShape(shape_num?: number, colour?: string) {
+  setShape({ shape_num, colour }: setShapeProps) {
     this.colour = colour ?? this.colour;
     this.shape_num = shape_num ?? this.shape_num;
-    drawShape(this.shape, this.shape_num, this.radius, this.colour);
+    const temp = drawShape(
+      this.shape,
+      this.shape_num,
+      this.radius,
+      this.colour
+    );
+    this.shape_num = Number(temp[0]);
+    this.colour = String(temp[1]);
 
     for (let i = 0; i < this.children.length; i++) {
-      this.children[i].setShape(shape_num, colour);
+      this.children[i].setShape({ shape_num, colour });
     }
   }
 

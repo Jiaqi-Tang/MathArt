@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import logo from "../assets/logo.png";
 
 // Header Component for Website
 export default function Header() {
@@ -36,8 +37,9 @@ export default function Header() {
         <div className="nav-wrapper">
           <div className="nav-content-wrapper">
             <div className="nav-content">
-              <Link to="/" className="nav-title">
-                Math Art
+              <Link to="/" className="nav-title-wrapper">
+                <img src={logo} alt="" className="nav-logo" />
+                <div className="nav-title">Home</div>
               </Link>
               <div className="nav-menu">
                 <div
