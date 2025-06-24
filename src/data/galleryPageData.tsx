@@ -1,4 +1,4 @@
-import { SpinArtPreview } from "../../components/Preview";
+import { SpinArtPreview } from "../components/SpinArt";
 
 // Content for Spin Art Gallery Page
 export const spinGalleryData = {
@@ -22,28 +22,22 @@ export const spinGalleryData = {
         </p>
       </>
     ),
-    preview: <SpinArtPreview options={{}} />,
+    preview: <SpinArtPreview />,
     link: "/art/spin-classic",
   },
   gallery: [
     {
       name: "Lovely Dance",
-      preview: (
-        <SpinArtPreview
-          options={{ shape: 4, motionFunc: 1, colour: "#ff00ff" }}
-        />
-      ),
+      preview: <SpinArtPreview shape_num={4} motionFunc={1} colour="#ff00ff" />,
     },
     {
       name: "Glow with the Stars",
       preview: (
         <SpinArtPreview
-          options={{
-            numChildren: 5,
-            shape: 3,
-            colour: "yellow",
-            filters: ["glow"],
-          }}
+          numChildren={5}
+          shape_num={3}
+          colour="yellow"
+          filters={["glow"]}
         />
       ),
     },
@@ -51,7 +45,9 @@ export const spinGalleryData = {
       name: "Clovers",
       preview: (
         <SpinArtPreview
-          options={{ numChildren: 3, shape: 2, colour: "00aa00" }}
+          numChildren={3}
+          shape_num={2}
+          colour="00aa00"
           filters={["bloom"]}
         />
       ),
@@ -60,7 +56,9 @@ export const spinGalleryData = {
       name: "Behind the Mist",
       preview: (
         <SpinArtPreview
-          options={{ numChildren: 8, shape: 1, colour: "ff0000" }}
+          numChildren={8}
+          shape_num={1}
+          colour="ff0000"
           filters={["noise", "blur"]}
         />
       ),
@@ -69,13 +67,11 @@ export const spinGalleryData = {
       name: "The Absolute Chaos",
       preview: (
         <SpinArtPreview
-          options={{
-            numChildren: 7,
-            shape: -1,
-            motionFunc: 3,
-            colour: "-1",
-            filters: ["outline"],
-          }}
+          numChildren={7}
+          shape_num={-1}
+          motionFunc={3}
+          colour="-1"
+          filters={["outline"]}
         />
       ),
     },

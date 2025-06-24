@@ -265,6 +265,10 @@ li li {
   font-size: 1em
 }
 
+ul>li, ol>li {
+  margin: 1em 0px;
+}
+
 .css-sticky {
   position: -webkit-sticky;
   position: sticky;
@@ -306,8 +310,8 @@ header{
   padding-right: 1rem;
   border-radius: 8px;
   display: flex;
-  align-items: center; /* vertically centers logo and text */
-  text-decoration: none; /* optional: removes underline */
+  align-items: center; 
+  text-decoration: none;
   transition: transform 0.2s ease;
 }
 
@@ -324,15 +328,15 @@ header{
   letter-spacing: 0.011em;
   cursor: default;
   white-space: nowrap;
-  height: 52px; /* optional */
-  display: block; /* or inline-block */
-  padding: 0 0 0 10px; /* optional spacing from logo */
+  height: 52px; 
+  display: block; 
+  padding: 0 0 0 10px; 
   margin-top: 0.35rem;
 }
 
 .nav-logo {
   height: 3rem;
-  object-fit: contain; /* or 'cover' if you want it to fill the area more tightly */
+  object-fit: contain;
   display: block;
 }
 
@@ -359,7 +363,6 @@ header{
   width: 100%;
   height: auto;
   min-height: 100%;
-  /* z-index: 101; */
 }
 
 .nav-content-wrapper {
@@ -367,7 +370,6 @@ header{
   max-width: 980px;
   padding: 0 22px;
   position: relative;
-  /* z-index: 102; */
 }
 
 .nav-content {
@@ -395,13 +397,11 @@ header{
   background-color: var(--item-primary);
 }
 
-/* Dropdown styling */
 .dropdown {
   position: relative;
   display: inline-block;
 }
 
-/* Animate dropdown */
 .dropdown-content {
   font-size: 18px;
   margin-top: 0.5rem;
@@ -419,7 +419,6 @@ header{
   z-index: 1;
 }
 
-/* Show dropdown when open */
 .dropdown.open .dropdown-content {
   opacity: 1;
   transform: translateY(0);
@@ -440,9 +439,6 @@ header{
   transform: translateX(4px);
 }
 
-
-
-
 section{
   padding-top: 20px;
   padding-bottom: 80px;
@@ -457,11 +453,10 @@ section{
   align-items: center;
   min-height: 75vh;
   text-align: center;
-  position: relative; /* Needed to keep content on top of the background */
-  overflow: hidden; /* Hides the parts of the gradients that move outside the section */
+  position: relative; 
+  overflow: hidden; 
 }
 
-/* --- New styles for the dynamic background --- */
 .home-section::before {
   content: '';
   position: absolute;
@@ -469,23 +464,19 @@ section{
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1; /* Places the pseudo-element behind the content */
+  z-index: 1; 
   
-  /* Define multiple radial gradients for the nebula effect */
   background: 
     radial-gradient(circle at 15% 35%, rgba(142, 45, 226, 0.6), transparent 40%),
     radial-gradient(circle at 85% 65%, rgba(74, 0, 224, 0.6), transparent 40%),
     radial-gradient(circle at 50% 50%, rgba(255, 0, 128, 0.5), transparent 30%),
     radial-gradient(circle at 30% 80%, rgba(0, 242, 255, 0.5), transparent 40%);
 
-  /* Set a dark background color */
   background-color: #0c0a1f; 
 
-  /* Define the animation */
   animation: moveGradients 2s ease-in-out infinite alternate;
 }
 
-/* Keyframes to animate the background positions */
 @keyframes moveGradients {
   0% {
     background-position: 0% 0%, 100% 100%, 50% 50%, 20% 90%;
@@ -495,17 +486,16 @@ section{
   }
 }
 
-/* --- Styles for your content to ensure it's visible --- */
 .home-section-content {
-  position: relative; /* Ensures this content stays on top */
-  z-index: 2; /* Higher z-index than the pseudo-element */
-  color: #ffffff; /* White text for better contrast */
-  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow to the text */
+  position: relative;
+  z-index: 2; 
+  color: #ffffff;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 
 .home-logo {
-  width: 50vh; /* adjust size as needed */
+  width: 50vh;
   height: auto;
   padding-bottom: 40px;
   filter: drop-shadow(0px 10px 14px rgba(0, 0, 0, 0.4));
@@ -605,6 +595,8 @@ section{
   z-index: 0;
   position: relative;
   padding-left: 5%;
+  padding-bottom: 0%;
+  padding-top: 0%;
   background-color: var(--background-primary);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -645,13 +637,12 @@ section{
 
 .art-controls-btn-wrapper {
   display: flex;
-  flex-wrap: wrap;          /* allows buttons to wrap to next line */
-  justify-content: flex-end; /* aligns wrapped rows to the right */
-  gap: 0.5rem;               /* optional spacing between buttons */
-  width: 100%;               /* ensures it uses full container width */
+  flex-wrap: wrap;          
+  justify-content: flex-end; 
+  gap: 0.5rem;               
+  width: 100%;          
 }
 
-/* Button styles for art controls */
 .art-control-btn {
   background-color: var(--item-primary);
   color: var(--text-secondary);
@@ -701,15 +692,9 @@ section{
   transform: scale(1.03);
 }
 
-/* Gallery grid tile (used for variations) */
 .item-2up {
   width: 45%;
   margin-bottom: 2rem;
-}
-
-/* Optional: featured item spacing */
-.featured-item {
-  margin-bottom: 3rem;
 }
 
 .control {
@@ -739,22 +724,20 @@ section{
 .range-control {
   display: flex;
   align-items: center;
-  gap: 1rem; /* spacing between slider and value */
+  gap: 1rem; 
   width: 100%;
 }
 
 .range-slider {
   flex-grow: 1;
-  accent-color: var(--item-important); /* optional: custom thumb color */
+  accent-color: var(--item-important); 
 }
 
 .range-value {
   font-weight: bold;
-  min-width: 3rem; /* consistent width */
+  min-width: 3rem; 
   text-align: right;
 }
-
-
 
 .input__box {
   border-width: 1px;
@@ -776,11 +759,16 @@ section{
   overflow: hidden
 }
 
-
 .section-content {
   margin-left: auto;
   margin-right: auto;
   width: 75%;
+}
+
+.about-content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
 }
 
 .section-head {
@@ -791,7 +779,6 @@ section{
   margin-top: 24px;
   margin-bottom: 24px;
 }
-
 
 .section-tiles {
   align-items: stretch;
@@ -806,7 +793,6 @@ section{
   flex: 0 0 303px;
 }
 
-
 .tile-item {
   position: relative;
   list-style: none
@@ -818,19 +804,6 @@ section{
   background-color: var(--item_secondary-odd);
 }
 
-.tile.tile-2up .tile__headline {
-  font-size: 24px;
-  line-height: 1.16667;
-  font-weight: 700;
-  letter-spacing: .009em;
-  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
-  display: -webkit-box;
-  overflow: hidden
-}
-
-
 .tile.tile-2up .tile__description {
   padding: 32px;
   justify-content: space-between;
@@ -841,47 +814,11 @@ section{
   flex-shrink: 0
 }
 
-.tile.tile-2up .image {
-  background-size: cover
-}
-
-.tile.tile-2up .tile__media,
-.tile.tile-2up .tile__image-container {
-  width: 100%;
-  /* height: 266px; */
-  min-height: auto;
-  flex-basis: auto;
-  flex-shrink: 1
-}
-
-.tile.tile-2up .tile__category {
-  margin-bottom: 8px
-}
-
-.tile.tile-2up .tile__timestamp {
-  margin-top: 12px
-}
-
-
-
 .tile.tile-hero {
   flex-direction: row;
   width: 100%;
   background-color: var(--item-primary);
 }
-
-.tile.tile-hero .tile__headline {
-  font-size: 32px;
-  line-height: 1.125;
-  font-weight: 700;
-  letter-spacing: .004em;
-  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
-  display: -webkit-box;
-  overflow: hidden
-}
-
 
 .tile.tile-hero .tile__description {
   padding: 32px;
@@ -890,29 +827,8 @@ section{
 }
 
 .tile.tile-hero .tile__media {
-  flex-shrink: 1
-}
-
-.tile.tile-hero .image {
-  background-size: contain
-}
-
-.tile.tile-hero .tile__media {
   width: 65%;
   height: auto;
   min-height: 362px;
   flex-shrink: 1
-}
-
-.tile.tile-hero .tile__category {
-  margin-bottom: 8px
-}
-
-.tile.tile-hero .tile__timestamp {
-  margin-top: 12px
-}
-
-
-ul>li, ol>li {
-  margin: 1em 0px;
 }

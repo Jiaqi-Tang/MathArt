@@ -1,6 +1,5 @@
 import { Application, BlurFilter, Filter } from "pixi.js";
 import { Viewport } from "pixi-viewport";
-
 import { BloomFilter, ShockwaveFilter, SimplexNoiseFilter } from "pixi-filters";
 
 interface ArtCanvasConfig {
@@ -63,6 +62,7 @@ export class ArtCanvas {
     return instance;
   }
 
+  // Resets Zoom
   refreshZoom() {
     if (!this.viewport) return;
 

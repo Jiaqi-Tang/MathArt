@@ -1,12 +1,11 @@
-import { useState, useMemo } from "react";
-import debounce from "lodash.debounce"; // or from another debounce library
-
+import { useState } from "react";
 import { HexColorPicker } from "react-colorful";
-import SpinArtInteractive, {
+import {
+  SpinArtInteractive,
   AVALIABLE_FILTERS,
   AVALIABLE_SHAPES,
   AVALIABLE_FUNCTIONS,
-} from "../../components/InteractiveArt";
+} from "../components/SpinArt";
 import {
   ZoomButton,
   NumberInput,
@@ -14,11 +13,11 @@ import {
   FilterButton,
   SpinButton,
   ChaosButton,
-} from "../../components/tools/Buttons";
+} from "../components/tools/Buttons";
 
-// Control panel for the Interactive Spin Art Page
-export function spinArtControls() {
-  // Main art state
+// Data for the Interactive Spin Art Page
+export function spinArtData() {
+  // Interactive Art States
   const [spinSpeed, setSpinSpeed] = useState(1);
   const [numChildren, setNumChildren] = useState(6);
   const [numLayers, setNumLayers] = useState(4);
@@ -27,13 +26,6 @@ export function spinArtControls() {
   const [shape, setShape] = useState(0);
   const [func, setFunc] = useState(0);
   const [zoom, triggerZoom] = useState(false);
-
-  const [isPicking, setIsPicking] = useState(false);
-
-  // Local input state for numChildren
-  const [inputNumChildren, setInputNumChildren] = useState(
-    numChildren.toString()
-  );
 
   return {
     title: "Spin Art",
@@ -100,11 +92,8 @@ export function spinArtControls() {
             <HexColorPicker
               color={colour}
               onChange={(c) => {
-                setIsPicking(true);
                 setColour(c);
               }}
-              onMouseUp={() => setIsPicking(false)}
-              onTouchEnd={() => setIsPicking(false)}
             />
             <div className="btn-wrapper">
               <ChaosButton
@@ -112,7 +101,7 @@ export function spinArtControls() {
                 value={colour}
                 type="colour-btn"
                 onClick={() => {
-                  if (!isPicking) setColour("-1");
+                  setColour("-1");
                 }}
               />
             </div>

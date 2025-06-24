@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 
+// Draws PIXI Graphics shape
 export function drawShape(
   g: PIXI.Graphics,
   shape: number,
@@ -16,8 +17,9 @@ export function drawShape(
   switch (shape) {
     case 1: {
       // Rectangle
+      const side = 0.9 * scale;
       g.clear()
-        .rect(-scale, -scale, 2 * scale, 2 * scale)
+        .rect(-side, -side, 2 * side, 2 * side)
         .fill(colour);
       break;
     }
@@ -25,7 +27,7 @@ export function drawShape(
       // Triangle
       const cx = 0;
       const cy = 0;
-      const side = 2 * scale;
+      const side = 2.2 * scale;
 
       const height = (Math.sqrt(3) / 2) * side;
 
@@ -84,12 +86,12 @@ export function drawShape(
   return [shape, colour];
 }
 
+// Returns random bright colour
 function getRandomColor(): string {
   let color: string;
   let brightness: number;
 
   do {
-    // Generate random R, G, B
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
@@ -97,11 +99,10 @@ function getRandomColor(): string {
     // Calculate perceived brightness using luminance formula
     brightness = 0.299 * r + 0.587 * g + 0.114 * b;
 
-    // Convert to hex
     color = `#${r.toString(16).padStart(2, "0")}${g
       .toString(16)
       .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-  } while (brightness < 180); // tweak threshold for desired brightness
+  } while (brightness < 250);
 
   return color;
 }

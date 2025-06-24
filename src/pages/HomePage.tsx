@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { featuredGalleries } from "../data/galleries/featured";
+import { featuredGalleries } from "../data/homePageData";
 import { useTileObserver } from "./tools/functions";
 import logo from "../assets/logo.png";
 
@@ -28,9 +28,9 @@ export function HomePageContent({ galleries }: Prop) {
         <div className="section-content home-section-content">
           <img src={logo} alt="Math Art Logo" className="home-logo" />
           <h1 className="section-head">Welcome to Math Art!</h1>
-          <p className="section-subhead">
-            This is a place where mathematical art meets interactivity.
-          </p>
+          {/* <p className="section-subhead">
+            This is a home for dynamic, interactive MathArt
+          </p> */}
         </div>
       </section>
       <section className="featured featured-galleries">

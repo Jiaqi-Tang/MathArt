@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { ReactNode } from "react";
-import { spinGalleryData } from "../data/galleries/spinGallery.js";
+import { spinGalleryData } from "../data/galleryPageData.js";
 import { useTileObserver } from "./tools/functions.js";
 
 interface Featured {

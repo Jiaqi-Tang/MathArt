@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { Application, Graphics } from "pixi.js";
 import { drawShape } from "../../pixi/tools/functions";
-import { SpinArtPreview } from "../Preview";
+import { SpinArtPreview } from "../SpinArt";
 
 interface ChaosButtonProps {
   name: any;
@@ -38,6 +38,54 @@ export function ZoomButton({ onClick }: ZoomButtonProps) {
     >
       Reset Zoom
     </button>
+  );
+}
+
+interface NumberInputProps {
+  value: number;
+  setValue: (value: number) => void;
+  min: number;
+  max: number;
+}
+
+export function NumberInput({
+  value,
+  setValue,
+  min = 2,
+  max = 8,
+}: NumberInputProps) {
+  const [inputNumChildren, setInputNumChildren] = useState(value.toString());
+  const lastKeyPressed = useRef<string | null>(null);
+
+  const applyNumChildren = () => {
+    let num = parseInt(inputNumChildren, 10);
+    if (isNaN(num)) {
+      num = value; // revert to last valid value
+    }
+    num = Math.min(max, Math.max(min, num));
+    setValue(num);
+    setInputNumChildren(num.toString()); // update display after apply
+  };
+
+  return (
+    <input
+      className="input__box"
+      type="number"
+      min={min}
+      max={max}
+      value={inputNumChildren}
+      onChange={(e) => {
+        setInputNumChildren(e.target.value);
+      }}
+      onKeyDown={(e) => {
+        lastKeyPressed.current = e.key;
+        if (e.key === "Enter") {
+          applyNumChildren();
+        }
+        if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
+      }}
+      onBlur={applyNumChildren}
+    />
   );
 }
 
@@ -93,25 +141,6 @@ export function ShapeButton({
   );
 }
 
-interface FilterButtonProps {
-  name: string;
-  filters: string[];
-  onClick: () => void;
-}
-
-export function FilterButton({ name, filters, onClick }: FilterButtonProps) {
-  return (
-    <button
-      onClick={() => onClick()}
-      className={`art-control-btn text-btn filter-btn${
-        filters.includes(name) ? " active" : ""
-      }`}
-    >
-      {name}
-    </button>
-  );
-}
-
 interface SpinButtonProps {
   size: number;
   name: number;
@@ -133,50 +162,21 @@ export function SpinButton({ size, name, func, onClick }: SpinButtonProps) {
   );
 }
 
-interface NumberInputProps {
-  value: number;
-  setValue: (value: number) => void;
-  min: number;
-  max: number;
+interface FilterButtonProps {
+  name: string;
+  filters: string[];
+  onClick: () => void;
 }
 
-export function NumberInput({
-  value,
-  setValue,
-  min = 2,
-  max = 8,
-}: NumberInputProps) {
-  const [inputNumChildren, setInputNumChildren] = useState(value.toString());
-  const lastKeyPressed = useRef<string | null>(null);
-
-  const applyNumChildren = () => {
-    let num = parseInt(inputNumChildren, 10);
-    if (isNaN(num)) {
-      num = value; // revert to last valid value
-    }
-    num = Math.min(max, Math.max(min, num));
-    setValue(num);
-    setInputNumChildren(num.toString()); // update display after apply
-  };
-
+export function FilterButton({ name, filters, onClick }: FilterButtonProps) {
   return (
-    <input
-      className="input__box"
-      type="number"
-      min={min}
-      max={max}
-      value={inputNumChildren}
-      onChange={(e) => {
-        setInputNumChildren(e.target.value);
-      }}
-      onKeyDown={(e) => {
-        lastKeyPressed.current = e.key;
-        if (e.key === "Enter") {
-          applyNumChildren();
-        }
-        if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
-      }}
-      onBlur={applyNumChildren}
-    />
+    <button
+      onClick={() => onClick()}
+      className={`art-control-btn text-btn filter-btn${
+        filters.includes(name) ? " active" : ""
+      }`}
+    >
+      {name}
+    </button>
   );
 }

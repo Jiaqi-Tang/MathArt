@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+// Animates tiles
 export function useTileObserver() {
   useEffect(() => {
     const observer = new IntersectionObserver(

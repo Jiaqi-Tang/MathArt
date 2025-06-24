@@ -2,10 +2,10 @@ import { Container, Graphics, Filter } from "pixi.js";
 import { GlowFilter, OutlineFilter } from "pixi-filters";
 import { drawShape } from "./tools/functions";
 
-export interface NestConOptions {
+export interface SpinConOptions {
   layers?: number;
   numChildren?: number;
-  shape?: number;
+  shape_num?: number;
   radius?: number;
   colour?: string;
   motionFunc?: number;
@@ -18,44 +18,43 @@ interface setShapeProps {
   colour?: string;
 }
 
-// Nested containers class whihc is the core part for Spin Art
+// Nested containers class whihch is the core part for Spin Art
 // Each shape is added to its parent's container so they can be spun
-export class spinCon {
+export class SpinCon {
   private layer: number;
   private numChildren: number;
   private shape_num: number;
-  private shape: Graphics;
   private radius: number;
   private colour: string;
-  private moveControl: number;
+
   private distance: number;
-  private children: spinCon[];
+  private children: SpinCon[];
+  private moveControls: number[];
   private motionFunc: (scale: number) => void;
+
+  private shape: Graphics;
   public container: Container;
 
   // Creates NestCon
-  public constructor(options: NestConOptions) {
+  public constructor(options: SpinConOptions) {
     // Reads in input parameters
     this.layer = options.layers ?? 4;
     this.numChildren = options.numChildren ?? 6;
-    this.shape_num = options.shape ?? 0;
+    this.shape_num = options.shape_num ?? 0;
     this.radius = options.radius ?? 10;
     this.colour = options.colour ?? "white";
 
-    // Distance to children
+    // Init variables
+    this.container = new Container();
+    this.children = [];
     this.distance = (this.radius + 2) * Math.pow(3, this.layer - 1);
 
-    // Init variables
-    this.children = [];
-    this.container = new Container();
-    this.moveControl = -1;
-
-    // Sets move function
+    // Sets motion function
+    this.moveControls = [];
     this.motionFunc = function (scale) {};
     this.setMotionFunc(options.motionFunc ?? 0);
 
     // Sets shape
-
     this.shape = new Graphics();
     this.container.addChild(this.shape);
     const temp = drawShape(
@@ -79,7 +78,7 @@ export class spinCon {
       childOptions.layers = this.layer - 1;
 
       for (let i = 0; i < this.numChildren; i++) {
-        const child = new spinCon(childOptions);
+        const child = new SpinCon(childOptions);
         this.children.push(child);
 
         const angle = (2 * Math.PI) / this.numChildren;
@@ -90,6 +89,7 @@ export class spinCon {
     }
   }
 
+  // For manual destruction
   destroy() {
     for (let i = 0; i < this.children.length; i++) {
       this.children[i].destroy();
@@ -102,6 +102,7 @@ export class spinCon {
   private setMotionFunc(func: number) {
     switch (func) {
       case 1: {
+        // Circle centered at 2/3 distance\
         this.motionFunc = function (scale) {
           const containerAngle = (2 * Math.PI) / this.numChildren;
           for (let i = 0; i < this.children.length; i++) {
@@ -132,7 +133,9 @@ export class spinCon {
         break;
       }
       case 2: {
-        // Works but glitchy, likely computational / rounding stuff
+        // Sin wave
+        this.moveControls[0] = 1; // coefficient of sin
+        this.moveControls[1] = 0; // randians, [0, 2PI]
         this.motionFunc = function (scale) {
           const containerAngle = (2 * Math.PI) / this.numChildren;
           for (let i = 0; i < this.children.length; i++) {
@@ -141,27 +144,29 @@ export class spinCon {
             const s = ((3 / 2) * Math.PI) / this.distance;
             const tx = (1 / 2) * Math.PI;
 
-            var radians =
-              s *
-                (childCon.x * Math.cos(theta) - childCon.y * Math.sin(theta)) +
-              tx;
+            const curDist = Math.sqrt(
+              Math.pow(childCon.x, 2) + Math.pow(childCon.y, 2)
+            );
 
-            // console.log(radians);
-
-            radians = radians + 10 * this.layer * this.moveControl * scale;
-            if (radians < 0) {
-              this.moveControl = 1;
-            } else if (radians > 2 * Math.PI) {
-              this.moveControl = -1;
+            this.moveControls[1] +=
+              1.7 * this.moveControls[0] * scale * this.layer;
+            if (this.moveControls[1] <= 0) {
+              this.moveControls[0] = 1;
+            } else if (this.moveControls[1] >= 2 * Math.PI) {
+              this.moveControls[0] = -1;
             }
 
             childCon.x =
-              ((radians - tx) * Math.cos(theta) +
-                this.moveControl * Math.sin(radians) * Math.sin(theta)) /
+              ((this.moveControls[1] - tx) * Math.cos(theta) +
+                this.moveControls[0] *
+                  Math.sin(this.moveControls[1]) *
+                  Math.sin(theta)) /
               s;
             childCon.y =
-              ((radians - tx) * -1 * Math.sin(theta) +
-                this.moveControl * Math.sin(radians) * Math.cos(theta)) /
+              ((this.moveControls[1] - tx) * -1 * Math.sin(theta) +
+                this.moveControls[0] *
+                  Math.sin(this.moveControls[1]) *
+                  Math.cos(theta)) /
               s;
           }
 
@@ -170,11 +175,12 @@ export class spinCon {
         break;
       }
       case 3: {
+        this.moveControls[0] = -1; // Direction
+        this.moveControls[1] =
+          (0.5 + 24 / Math.pow(this.layer, 3)) * this.distance; // Max Distance
+        this.moveControls[2] = (1 / this.layer) * this.distance; // Min Distance
         this.motionFunc = function (scale) {
           const angle = (2 * Math.PI) / this.numChildren;
-
-          const maxDist = (0.5 + 8 / Math.pow(this.layer, 2)) * this.distance;
-          const minDist = (1 / this.layer) * this.distance;
 
           for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i];
@@ -182,25 +188,27 @@ export class spinCon {
             const curDist = Math.sqrt(
               Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)
             );
-            if (curDist >= maxDist) {
-              this.moveControl = -1;
-            } else if (curDist <= minDist) {
-              this.moveControl = 1;
+            if (curDist >= this.moveControls[1]) {
+              this.moveControls[0] = -1;
+            } else if (curDist <= this.moveControls[2]) {
+              this.moveControls[0] = 1;
             }
 
             const moveDist =
               30 *
-              (this.moveControl * Math.pow(this.distance, 2 / 3) + this.layer) *
+              (this.moveControls[0] * Math.pow(this.distance, 2 / 3) +
+                this.layer) *
               scale;
             childContainer.x += moveDist * Math.cos(i * angle);
             childContainer.y += moveDist * Math.sin(i * angle);
           }
 
-          this.container.rotation += this.layer * this.layer * scale;
+          this.container.rotation += 5 * this.layer * scale;
         };
         break;
       }
       default: {
+        this.moveControls[0] = -1;
         this.motionFunc = function (scale) {
           const angle = (2 * Math.PI) / this.numChildren;
 
@@ -215,18 +223,18 @@ export class spinCon {
                 Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)
               ) >= maxDist
             ) {
-              child.moveControl = -1;
+              child.moveControls[0] = -1;
             } else if (
               Math.sqrt(
                 Math.pow(childContainer.x, 2) + Math.pow(childContainer.y, 2)
               ) <= minDist
             ) {
-              child.moveControl = 1;
+              child.moveControls[0] = 1;
             }
 
             const moveDist =
               30 *
-              (child.moveControl * Math.pow(this.distance, 2 / 3) +
+              (child.moveControls[0] * Math.pow(this.distance, 2 / 3) +
                 this.layer) *
               scale;
             childContainer.x += moveDist * Math.cos(i * angle);
@@ -239,6 +247,7 @@ export class spinCon {
     }
   }
 
+  // For changing shape or colour without reconstruction
   setShape({ shape_num, colour }: setShapeProps) {
     this.colour = colour ?? this.colour;
     this.shape_num = shape_num ?? this.shape_num;
@@ -251,6 +260,7 @@ export class spinCon {
     this.shape_num = Number(temp[0]);
     this.colour = String(temp[1]);
 
+    // Recurse on children
     for (let i = 0; i < this.children.length; i++) {
       this.children[i].setShape({ shape_num, colour });
     }
@@ -282,6 +292,7 @@ export class spinCon {
     }
     this.shape.filters = curFilsArr;
 
+    // Recurse on children
     for (const child of this.children) {
       child.addFilters(filters);
     }
@@ -310,6 +321,7 @@ export class spinCon {
     }
     this.shape.filters = curFilsArr;
 
+    // Recurse on children
     for (const child of this.children) {
       child.removeFilters(filters);
     }
@@ -323,7 +335,7 @@ export class spinCon {
       return;
     }
 
-    // Moves children
+    // Recurse on children
     for (let i = 0; i < this.children.length; i++) {
       this.children[i].motion(scale);
     }

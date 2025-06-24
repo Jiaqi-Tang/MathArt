@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import logo from "../assets/logo.png";
 
-// Header Component for Website
+// Header Component
 export default function Header() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);

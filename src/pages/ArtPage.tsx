@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { ReactNode } from "react";
-import { spinArtControls } from "../data/artControls/spinControls";
+import { spinArtData } from "../data/artPageData";
 
 interface Control {
   description: string;
@@ -18,7 +18,7 @@ export default function ArtPage() {
   const { id } = useParams<{ id: string }>();
 
   if (id === "spin-classic") {
-    const SAC = spinArtControls();
+    const SAC = spinArtData();
     return (
       <ArtPageContent title={SAC.title} art={SAC.art} controls={SAC.controls} />
     );
