@@ -96,13 +96,12 @@ function getRandomColor(): string {
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
 
-    // Calculate perceived brightness using luminance formula
-    brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+    brightness = 0.333 * r + 0.333 * g + 0.333 * b;
 
     color = `#${r.toString(16).padStart(2, "0")}${g
       .toString(16)
       .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-  } while (brightness < 250);
+  } while (brightness < 140);
 
   return color;
 }
