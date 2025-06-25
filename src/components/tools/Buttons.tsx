@@ -157,7 +157,7 @@ export function SpinButton({ size, name, func, onClick }: SpinButtonProps) {
       }`}
       style={{ height: size, width: size }}
     >
-      <SpinArtPreview options={{ layers: 2, motionFunc: name, radius: 5 }} />
+      <SpinArtPreview layers={2} motionFunc={name} radius={5} />
     </button>
   );
 }

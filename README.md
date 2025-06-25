@@ -62,6 +62,13 @@ More features and galleries coming soon!
 - Art canvas automatically fits screen and supports zooming, optimizing space usage and user focus.
 - Designed for responsiveness, with visual feedback such as hover effects and dynamic elements for improved user engagement.
 
+## References & Credits
+
+- UI & CSS inspiration from [Floyd Li's iTheme on Hugo](https://themes.gohugo.io/themes/hugo-theme-itheme/).
+- Heart shape graphichs with bezier curves inspiration from [Jossyl Zamora on codepen.io](https://codepen.io/jolx/pen/EVGyVP)
+
+---
+
 ## Learnings and Initiative
 
 This project began with only a concept: _Can something feel both structured and unpredictable?_ That led to the concept of nestations, layering harmonic motions within each other. With no prior experience in React, Pixi.js, or Vite, I took on the challenge of turning an abstract artistic and mathematical idea into a polished, interactive web platform.
